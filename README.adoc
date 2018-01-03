@@ -44,15 +44,12 @@ Key directories to be aware of:
 
 If you need further information, please refer to the following resources:
 
-* http://njbartlett.name/osgibook.html[OSGi in Practice] Free, Creative Commons-licensed book on OSGi by Neil Bartlett.
-* https://www.osgi.org/developer/resources/learning-resources-tutorials/tutorial-archive/[Tutorial Archive from OSGi Alliance]: Lots of great articles and resources.
-* http://bndtools.org/[BND Tools]: The standard OSGi tool to build artifacts.
-* https://www.osgi.org/developer/specifications/[OSGi Specifications]: All OSGi specifications available from OSGi Alliance.
-* https://www.osgi.org/osgi-release-5-javadoc/[OSGi Release 5 Javadoc]: Browse online the javadocs for OSGi R5 APIs.
+* http://njbartlett.name/osgibook.html[OSGi in Practice^]: Free, Creative Commons-licensed book on OSGi by Neil Bartlett.
+* https://www.osgi.org/developer/resources/learning-resources-tutorials/tutorial-archive/[Tutorial Archive from OSGi Alliance^]: Lots of great articles and resources.
+* http://bndtools.org/[BND Tools^]: The standard OSGi tool to build artifacts.
+* https://www.osgi.org/developer/specifications/[OSGi Specifications^]: All OSGi specifications available from OSGi Alliance.
+* https://www.osgi.org/osgi-release-5-javadoc/[OSGi Release 5 Javadoc^]: Browse online the javadocs for OSGi R5 APIs.
 
 == Copyright
 
 This work is licensed under a http://www.apache.org/licenses/LICENSE-2.0[Apache License, Version 2.0].
-
-Subscribe to RSS Feed
-Home » OSGi in Practice
