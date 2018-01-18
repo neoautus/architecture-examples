@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+<project name="configure" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+    <property name="docs.dir" value="${basedir}/docs"/>
+    <property name="dist.dir" value="${basedir}/dist"/>
+    <property name="build.dir" value="${basedir}/build"/>
+
+    <dirname property="configure.dir" file="${ant.file.configure}"/>
+    <property name="cache.dir" value="${configure.dir}/cache"/>
+    <property name="libcache.dir" value="${cache.dir}/lib"/>
+    <property name="tmp.dir" value="${cache.dir}/tmp"/>
+
+    <property name="javac.source" value="1.8"/>
+    <property name="javac.target" value="1.8"/>
+    <property name="javac.debug" value="true"/>
+    <property name="javac.debuglevel" value="lines,vars,source"/>
+    <property name="javac.deprecation" value="on"/>
+    <property name="javac.optional" value="-Xlint:unchecked"/>
+    <!--property name="javac.bootclasspath" value="${basedir}/extras/java-rt/rt.jar:${basedir}/extras/java-rt/jce.jar"/-->
+
+    <property name="setup.ok.file" value="${cache.dir}/setup.ok"/>
+    <condition property="setup.ok.flag">
+        <available file="${setup.ok.file}"/>
+    </condition>
+
+    <target name="getlibs"
+        description="Retrieve default libraries from maven repositories.">
+
+        <resolvePath id="default/osgi">
+            <dependency org="org.osgi" name="org.osgi.core" rev="5.0.0"/>
+            <dependency org="org.osgi" name="org.osgi.compendium" rev="5.0.0"/>
+            <dependency org="org.osgi" name="org.osgi.enterprise" rev="5.0.0"/>
+        </resolvePath>
+
+        <property name="ipojo.rev" value="1.12.1"/>
+        <resolvePath id="default/ipojo">
+            <dependency org="org.apache.felix" name="org.apache.felix.ipojo" rev="${ipojo.rev}" />
+            <dependency org="org.apache.felix" name="org.apache.felix.ipojo.api" rev="${ipojo.rev}" />
+            <dependency org="org.apache.felix" name="org.apache.felix.ipojo.annotations" rev="${ipojo.rev}"/>
+            <dependency org="org.apache.felix" name="org.apache.felix.ipojo.handler.eventadmin" rev="1.8.0"/>
+            <dependency org="org.apache.felix" name="org.apache.felix.ipojo.handler.extender" rev="1.4.0"/>
+        </resolvePath>
+
+        <resolvePath id="default/javaee-api">
+            <dependency org="javax" name="javaee-api" rev="7.0" />
+        </resolvePath>
+
+    </target>
+
+    <target name="setup" unless="setup.ok.flag"
+        description="Retrieve base tools for this project.">
+
+        <!-- Get Ivy if we don't have it yet -->
+        <mkdir dir="${cache.dir}/setup"/>
+        <get dest="${cache.dir}/setup/ivy.jar"
+             src="http://search.maven.org/remotecontent?filepath=org/apache/ivy/ivy/2.4.0/ivy-2.4.0.jar"
+             skipexisting="true"/>
+
+        <get dest="${cache.dir}/setup/ant-contrib.jar"
+             src="http://search.maven.org/remotecontent?filepath=ant-contrib/ant-contrib/1.0b3/ant-contrib-1.0b3.jar"
+             skipexisting="true"/>
+
+        <!-- Retrieve all artifacts and store them inside libcache -->
+        <!--ivy:resolve/>
+        <ivy:retrieve sync="true" pattern="${libcache.dir}/[conf]/[type]/[artifact]-[revision].[ext]"/-->
+
+        <!-- Done! -->
+        <touch file="${setup.ok.file}" verbose="false"/>
+        <!--echo>
+            ======================================================================
+            Done! Resolved configurations: ${ivy.resolved.configurations}
+            ======================================================================
+        </echo-->
+    </target>
+
+    <!-- Fetch dependencies and place jars on cache/lib/[dependency-group] -->
+    <macrodef name="resolvePath">
+        <attribute name="id"/>
+        <attribute name="type" default="jar,bundle"/>
+        <attribute name="offline" default="false"/>
+        <attribute name="sync" default="false"/>
+        <element name="dependency-list" implicit="true" optional="no"/>
+        <sequential>
+            <local name="resolve.ok.file"/>
+            <property name="resolve.ok.file" value="${libcache.dir}/@{id}/resolve.ok"/>
+            <if><not><available file="${resolve.ok.file}"/></not>
+                <then>
+                    <echo taskname="resolvePath" message=":: Resolving dependencies for: @{id}"/>
+                    <ivy:resolve resolveid="@{id}.resolve"
+                        log="download-only" useCacheOnly="@{offline}">
+                        <dependency-list/>
+                    </ivy:resolve>
+                    <ivy:retrieve taskname="resolvePath"
+                        sync="@{sync}" type="@{type}" resolveid="@{id}.resolve"
+                        pattern="${libcache.dir}/@{id}/[type]/[artifact]-[revision].[ext]"/>
+                    <touch file="${resolve.ok.file}" verbose="false"/>
+                </then>
+            </if>
+            <path id="@{id}">
+                <fileset dir="${libcache.dir}/@{id}" includes="**/*.jar"/>
+            </path>
+            <!--echo message="Path @{id}: ${ant.refid:@{id}}"/-->
+        </sequential>
+    </macrodef>
+
+    <target name="setup-tasks" depends="setup">
+
+        <!-- Apache Ivy -->
+        <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant">
+            <classpath>
+                <fileset dir="${cache.dir}/setup" includes="ivy.jar"/>
+            </classpath>
+        </taskdef>
+
+        <!-- Ant-Contrib -->
+        <taskdef resource="net/sf/antcontrib/antlib.xml">
+            <classpath>
+                <fileset dir="${cache.dir}/setup" includes="ant-contrib.jar"/>
+            </classpath>
+        </taskdef>
+
+        <!-- Bnd Tasks -->
+        <resolvePath id="tasks/bnd">
+            <ivy:dependency org="biz.aQute.bnd" name="bnd" rev="2.4.0" transitive="false"/>
+        </resolvePath>
+        <taskdef resource="aQute/bnd/ant/taskdef.properties" classpathref="tasks/bnd"/>
+
+        <!-- iPojo Tasks -->
+        <resolvePath id="tasks/ipojo">
+            <dependency org="org.apache.felix" name="org.apache.felix.ipojo.ant" rev="1.12.1"/>
+            <dependency org="org.apache.felix" name="org.apache.felix.ipojo.metadata" rev="1.6.0"/>
+            <dependency org="org.apache.felix" name="org.apache.felix.ipojo.annotations" rev="1.12.1"/>
+            <dependency org="org.ow2.asm" name="asm-all" rev="5.0.2"/>
+        </resolvePath>
+        <taskdef name="ipojo" classname="org.apache.felix.ipojo.task.IPojoTask" classpathref="tasks/ipojo"/>
+
+    </target>
+
+    <target name="init" depends="setup-tasks, getlibs">
+
+        <path id="tasks.path">
+            <fileset dir="${libcache.dir}/tasks" includes="**/*.jar"/>
+        </path>
+
+        <path id="default.path">
+            <fileset dir="${libcache.dir}/default" includes="**/*.jar"/>
+        </path>
+
+    </target>
+
+    <target name="clean"
+        description="Clear all build artifacts created by the project.">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+
+    <target name="zero" depends="clean"
+        description="Clear all build artifacts created by the project AND all cached dependencies.">
+        <delete dir="${cache.dir}"/>
+    </target>
+
+    <!-- Wrap any jar more or less like wrap: protocol -->
+    <!-- src: full path for source jar -->
+    <!-- dest: destination directory OR full path of wrapped jar -->
+    <macrodef name="wrapjar">
+        <attribute name="src"/>
+        <attribute name="dest"/>
+        <sequential>
+            <basename property="src.basename" file="@{src}" suffix=".jar"/>
+            <propertyregex property="bsn" input="${src.basename}"
+                regexp="(.*)-(\d+\..*)" select="\1" defaultValue="${src.basename}"/>
+            <propertyregex property="version" input="${src.basename}"
+                regexp="(.*)-(\d+\..*)" select="\2" defaultValue="0.0.0"/>
+            <condition property="output.jar" value="@{dest}/${src.basename}.jar" else="@{dest}">
+                <available file="@{dest}" type="dir"/>
+            </condition>
+            <property name="output.bnd" value="${output.jar}.bnd"/>
+            <echo file="${output.bnd}">
+                Bundle-SymbolicName: ${bsn}
+                Bundle-Name: wrapped-${bsn}
+                Bundle-Version: ${version}
+                Import-Package: *;resolution:=optional
+                Export-Package: !javax.*,*;version=${version}
+            </echo>
+            <bnd files="${output.bnd}" output="${output.jar}"
+                    eclipse="false" failok="false" exceptions="true">
+                <classpath location="@{src}"/>
+            </bnd>
+            <jar destfile="${output.jar}" update="true" filesonly="true">
+                <zipfileset src="@{src}">
+                    <include name="**/*"/>
+                    <exclude name="**/*.class"/>
+                </zipfileset>
+            </jar>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="build.bundle">
+        <attribute name="symbolicName"/>
+        <attribute name="version" default="0.0.0"/>
+        <attribute name="src"/>
+        <attribute name="bnd"/>
+        <element name="path-args" implicit="true" optional="yes"/>
+        <sequential>
+            <local name="module.classes.dir"/>
+            <property name="module.classes.dir" value="${build.dir}/@{symbolicName}-@{version}/classes"/>
+            <local name="module.dist.dir"/>
+            <property name="module.dist.dir" value="${dist.dir}/@{symbolicName}"/>
+            <local name="module.dist.jar"/>
+            <property name="module.dist.jar" value="${module.dist.dir}/@{symbolicName}-@{version}.jar"/>
+
+            <delete dir="${module.classes.dir}"/>
+            <mkdir dir="${module.classes.dir}"/>
+
+            <javac srcdir="@{src}" destdir="${module.classes.dir}"
+                   source="${javac.source}" target="${javac.target}"
+                   debug="${javac.debug}" debuglevel="${javac.debuglevel}" deprecation="${javac.deprecation}"
+                   includeantruntime="false">
+                <compilerarg value="${javac.optional}"/>
+                <classpath>
+                    <pathelement path="${module.classes.dir}"/>
+                    <path-args/>
+                    <path refid="default.path"/>
+                </classpath>
+            </javac>
+
+            <delete file="${module.dist.jar}"/>
+            <mkdir dir="${module.dist.dir}"/>
+
+            <bnd files="@{bnd}" output="${module.dist.jar}"
+                 eclipse="false" failok="false" exceptions="true">
+                <classpath>
+                    <pathelement path="${module.classes.dir}"/>
+                    <path-args/>
+                    <path refid="default.path"/>
+                </classpath>
+            </bnd>
+        </sequential>
+    </macrodef>
+
+</project>

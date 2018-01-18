@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<project name="architecture-examples" default="build-all">
+
+    <import file="configure.xml"/>
+
+    <target name="build-all" depends="init">
+
+    </target>
+
+</project>

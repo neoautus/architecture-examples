@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<project name="bootstrap" default="build-bundle">
+
+    <import>
+        <fileset dir="${basedir}" includes="configure.xml"/>
+        <fileset dir="${basedir}/.." includes="configure.xml"/>
+    </import>
+
+    <target name="getlibs" depends="configure.getlibs">
+
+        <property name="karaf.release" value="4.1.1"/>
+        <resolvePath id="karaf/runtime">
+            <dependency org="org.apache.karaf.shell" name="org.apache.karaf.shell.console" rev="${karaf.release}" transitive="false"/>
+            <dependency org="org.apache.karaf.shell" name="org.apache.karaf.shell.core" rev="${karaf.release}" transitive="false"/>
+            <dependency org="org.apache.karaf.features" name="org.apache.karaf.features.core" rev="${karaf.release}" transitive="false"/>
+        </resolvePath>
+
+        <resolvePath id="karaf/util">
+            <dependency org="org.apache.karaf" name="org.apache.karaf.util" rev="${karaf.release}" transitive="false"/>
+            <dependency org="org.apache.felix" name="org.apache.felix.utils" rev="1.8.4" transitive="false"/>
+            <dependency org="org.apache.felix" name="org.apache.felix.gogo.runtime" rev="1.0.4"/><!-- For ThreadIO -->
+        </resolvePath>
+
+    </target>
+
+    <target name="build-bundle" depends="init">
+
+        <echo message="Building bundle."/>
+
+        <build.bundle symbolicName="Bootstrap" version="1.0.0"
+            src="${basedir}/src" bnd="${basedir}/bundle.bnd">
+            <path refid="karaf/runtime"/>
+            <path refid="karaf/util"/>
+        </build.bundle>
+
+    </target>
+
+</project>
