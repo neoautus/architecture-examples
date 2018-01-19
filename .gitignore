@@ -2,6 +2,10 @@ build/*
 dist/*
 cache/*
 stage/*
+*/build/*
+*/dist/*
+*/cache/*
+*/stage/*
 
 # IntelliJ IDEA
 .ant-targets-build.xml
