@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<project name="apache-karaf" default="build-runtime">
+
+    <import>
+        <fileset dir="${basedir}" includes="configure.xml"/>
+        <fileset dir="${basedir}/.." includes="configure.xml"/>
+    </import>
+
+    <property file="build.properties"/>
+
+    <target name="build-runtime" depends="init">
+
+        <mkdir dir="${karaf.dist.dir}"/>
+        <if><not><available file="${karaf.dist.dir}/${karaf.dist.zip}"/></not>
+            <then>
+                <echo message="Downloading Apache Karaf distribution: ${karaf.dist.zip}"/>
+                <get src="${karaf.dist.url}" dest="${karaf.dist.dir}/download.tmp" verbose="true"/>
+                <move file="${karaf.dist.dir}/download.tmp"
+                    tofile="${karaf.dist.dir}/${karaf.dist.zip}"/>
+            </then>
+        </if>
+
+        <!-- Apache Karaf is unziped first so it can be overwritten if needed -->
+        <if><not><available file="${stage.dir}" type="dir"/></not>
+            <then>
+                <unzip src="${karaf.dist.dir}/${karaf.dist.zip}" dest="${stage.dir}">
+                    <cutdirsmapper dirs="1"/>
+                </unzip>
+
+                <propertyfile file="${stage.dir}/stage.properties">
+                    <entry key="deploy.dir" value="${stage.dir}/deploy"/>
+                </propertyfile>
+            </then>
+        </if>
+
+    </target>
+
+</project>

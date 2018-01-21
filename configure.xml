@@ -10,6 +10,11 @@
     <property name="libcache.dir" value="${cache.dir}/lib"/>
     <property name="tmp.dir" value="${cache.dir}/tmp"/>
 
+    <property name="stage.dir" value="${configure.dir}/stage"/>
+    <condition property="stage.available.flag">
+        <available file="${stage.dir}" type="dir"/>
+    </condition>
+
     <property name="javac.source" value="1.8"/>
     <property name="javac.target" value="1.8"/>
     <property name="javac.debug" value="true"/>
@@ -144,6 +149,7 @@
         description="Clear all build artifacts created by the project.">
         <delete dir="${build.dir}"/>
         <delete dir="${dist.dir}"/>
+        <delete dir="${stage.dir}"/>
     </target>
 
     <target name="zero" depends="clean"
@@ -187,6 +193,20 @@
         </sequential>
     </macrodef>
 
+    <macrodef name="deploy">
+        <attribute name="file"/>
+        <sequential>
+            <if><isset property="stage.available.flag"/>
+                <then>
+                    <property file="${stage.dir}/stage.properties"/>
+                    <property name="deploy.dir" value="${stage.dir}/deploy"/>
+                    <copy file="@{file}" todir="${deploy.dir}"
+                        overwrite="true" taskname="deploy"/>
+                </then>
+            </if>
+        </sequential>
+    </macrodef>
+
     <macrodef name="iterate">
         <attribute name="target"/>
         <attribute name="dir" default="${basedir}"/>
@@ -203,6 +223,7 @@
         <attribute name="version" default="0.0.0"/>
         <attribute name="src"/>
         <attribute name="bnd"/>
+        <attribute name="outfileProperty" default="module.temp"/>
         <element name="path-args" implicit="true" optional="yes"/>
         <sequential>
             <local name="module.classes.dir"/>
@@ -211,6 +232,8 @@
             <property name="module.dist.dir" value="${dist.dir}/@{symbolicName}"/>
             <local name="module.dist.jar"/>
             <property name="module.dist.jar" value="${module.dist.dir}/@{symbolicName}-@{version}.jar"/>
+            <local name="module.temp"/>
+            <property name="@{outfileProperty}" value="${module.dist.jar}"/>
 
             <delete dir="${module.classes.dir}"/>
             <mkdir dir="${module.classes.dir}"/>
