@@ -50,27 +50,19 @@
     <target name="setup" unless="setup.ok.flag"
         description="Retrieve base tools for this project.">
 
-        <!-- Get Ivy if we don't have it yet -->
+        <!-- Get Ivy -->
         <mkdir dir="${cache.dir}/setup"/>
         <get dest="${cache.dir}/setup/ivy.jar"
              src="http://search.maven.org/remotecontent?filepath=org/apache/ivy/ivy/2.4.0/ivy-2.4.0.jar"
              skipexisting="true"/>
 
+        <!-- Get Ant-Contrib -->
         <get dest="${cache.dir}/setup/ant-contrib.jar"
              src="http://search.maven.org/remotecontent?filepath=ant-contrib/ant-contrib/1.0b3/ant-contrib-1.0b3.jar"
              skipexisting="true"/>
 
-        <!-- Retrieve all artifacts and store them inside libcache -->
-        <!--ivy:resolve/>
-        <ivy:retrieve sync="true" pattern="${libcache.dir}/[conf]/[type]/[artifact]-[revision].[ext]"/-->
-
         <!-- Done! -->
         <touch file="${setup.ok.file}" verbose="false"/>
-        <!--echo>
-            ======================================================================
-            Done! Resolved configurations: ${ivy.resolved.configurations}
-            ======================================================================
-        </echo-->
     </target>
 
     <!-- Fetch dependencies and place jars on cache/lib/[dependency-group] -->
@@ -192,6 +184,17 @@
                     <exclude name="**/*.class"/>
                 </zipfileset>
             </jar>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="iterate">
+        <attribute name="target"/>
+        <attribute name="dir" default="${basedir}"/>
+        <attribute name="includes" default="*/build.xml"/>
+        <sequential>
+            <subant target="@{target}">
+                <fileset dir="@{dir}" includes="@{includes}"/>
+            </subant>
         </sequential>
     </macrodef>
 

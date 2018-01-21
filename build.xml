@@ -3,8 +3,12 @@
 
     <import file="configure.xml"/>
 
-    <target name="build-all" depends="init">
+    <target name="build-all">
+        <iterate target=""/>
+    </target>
 
+    <target name="clean">
+        <iterate target="clean"/>
     </target>
 
 </project>
