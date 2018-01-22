@@ -33,6 +33,14 @@
             </then>
         </if>
 
+        <!-- Make /bin/* +x since we get Karaf from .zip -->
+        <chmod perm="ug+rx">
+            <fileset dir="${stage.dir}">
+                <include name="bin/*"/>
+                <exclude name="**/*.bat"/>
+            </fileset>
+        </chmod>
+        
     </target>
 
 </project>
