@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<project name="library-version" default="build-modules">
+
+    <import>
+        <fileset dir="${basedir}" includes="configure.xml"/>
+        <fileset dir="${basedir}/.." includes="configure.xml"/>
+    </import>
+
+    <target name="build-modules" depends="init">
+
+        <!--
+            These sources use ipojo feature on Apache Karaf.
+
+            To install ipojo on Karaf, use:
+                feature:repo-add http://repo1.maven.org/maven2/org/apache/felix/org.apache.felix.ipojo.features/1.12.1/org.apache.felix.ipojo.features-1.12.1.xml
+                feature:install ipojo-all
+        -->
+
+        <!-- ======================== -->
+        <!-- Build the twin libraries -->
+        <!-- ======================== -->
+
+        <build.module dir="SimpleLib-1.0" symbolicName="SimpleLib" version="1.0"
+            exports="org.lucidj.simplelib;version=1.0.0"
+            deploy="true" outfileProperty="simplelib-1.0.jar"/>
+
+        <build.module dir="SimpleLib-2.0" symbolicName="SimpleLib" version="2.0"
+            exports="org.lucidj.simplelib;version=2.0.0"
+            deploy="true" outfileProperty="simplelib-2.0.jar"/>
+
+        <!-- ======================================================== -->
+        <!-- Build the modules, each depending on a different library -->
+        <!-- ======================================================== -->
+
+        <build.module dir="Client-1.0" symbolicName="Client-1.0"
+            exports="org.lucidj.client10"
+            deploy="true" outfileProperty="client-1.0.jar">
+            <classpath>
+                <pathelement path="${simplelib-1.0.jar}"/>
+            </classpath>
+        </build.module>
+
+        <build.module dir="Client-2.0" symbolicName="Client-2.0"
+            exports="org.lucidj.client20"
+            deploy="true" outfileProperty="client-2.0.jar">
+            <classpath>
+                <pathelement path="${simplelib-2.0.jar}"/>
+            </classpath>
+        </build.module>
+
+        <!-- ==================================================================================== -->
+        <!-- Build Main, which uses BOTH client jars, each wired to a different SimpleLib version -->
+        <!-- ==================================================================================== -->
+
+        <build.module dir="Main" symbolicName="Main" version="1.0" deploy="true">
+            <classpath>
+                <pathelement path="${client-1.0.jar}"/>
+                <pathelement path="${client-2.0.jar}"/>
+            </classpath>
+        </build.module>
+
+    </target>
+
+</project>

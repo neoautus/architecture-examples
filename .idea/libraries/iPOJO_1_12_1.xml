@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="iPOJO 1.12.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/cache/lib/default/ipojo/bundle/org.apache.felix.ipojo-1.12.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/cache/lib/default/ipojo/bundle/org.apache.felix.ipojo.api-1.12.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/cache/lib/default/ipojo/jar/org.apache.felix.ipojo.annotations-1.12.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/cache/lib/default/ipojo/bundle/org.apache.felix.ipojo.handler.eventadmin-1.8.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/cache/lib/default/ipojo/bundle/org.apache.felix.ipojo.handler.extender-1.4.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/cache/lib/default/ipojo/bundle/org.apache.felix.ipojo.composite-1.12.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

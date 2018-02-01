@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Karaf Utils 4.1.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/cache/lib/karaf/util/bundle/org.apache.felix.gogo.runtime-1.0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/cache/lib/karaf/util/jar/org.apache.felix.utils-1.8.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/cache/lib/karaf/util/jar/org.apache.karaf.util-4.1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

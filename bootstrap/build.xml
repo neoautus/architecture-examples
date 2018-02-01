@@ -30,9 +30,11 @@
         <local name="bundle.dist.jar"/>
         <build.bundle symbolicName="Bootstrap" version="1.0.0"
             src="${basedir}/src" bnd="${basedir}/bundle.bnd"
-                      outfileProperty="bundle.dist.jar">
-            <path refid="karaf/runtime"/>
-            <path refid="karaf/util"/>
+            outfileProperty="bundle.dist.jar" ipojo="false">
+            <classpaths>
+                <path refid="karaf/runtime"/>
+                <path refid="karaf/util"/>
+            </classpaths>
         </build.bundle>
 
         <deploy file="${bundle.dist.jar}"/>

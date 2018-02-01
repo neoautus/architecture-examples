@@ -149,11 +149,11 @@
         description="Clear all build artifacts created by the project.">
         <delete dir="${build.dir}"/>
         <delete dir="${dist.dir}"/>
-        <delete dir="${stage.dir}"/>
     </target>
 
     <target name="zero" depends="clean"
         description="Clear all build artifacts created by the project AND all cached dependencies.">
+        <delete dir="${stage.dir}"/>
         <delete dir="${cache.dir}"/>
     </target>
 
@@ -218,25 +218,50 @@
         </sequential>
     </macrodef>
 
+    <macrodef name="listpackages">
+        <attribute name="dir"/>
+        <attribute name="property"/>
+        <sequential>
+            <fileset dir="@{dir}" id="classes">
+                <include name="**/*.class"/>
+                <exclude name="code/**"/>
+            </fileset>
+            <local name="packages"/>
+            <pathconvert dirsep="/" refid="classes" property="packages" pathsep="," setonempty="false">
+                <mapper type="regexp" from="@{dir}/(.*)/.*\.class" to="\1" />
+            </pathconvert>
+            <dirset id="unique.packages" dir="@{dir}" includes="${packages}"/>
+            <pathconvert dirsep="." refid="unique.packages" property="@{property}" pathsep=", ">
+                <map from="@{dir}/" to=""/>
+            </pathconvert>
+        </sequential>
+    </macrodef>
+
     <macrodef name="build.bundle">
         <attribute name="symbolicName"/>
         <attribute name="version" default="0.0.0"/>
         <attribute name="src"/>
-        <attribute name="bnd"/>
-        <attribute name="outfileProperty" default="module.temp"/>
-        <element name="path-args" implicit="true" optional="yes"/>
+        <attribute name="bnd" default="auto"/>
+        <attribute name="exports" default="void"/>
+        <attribute name="ipojo" default="true"/>
+        <attribute name="outfileProperty" default="bundle.temp.jar"/>
+        <element name="classpaths" optional="yes"/>
         <sequential>
             <local name="module.classes.dir"/>
             <property name="module.classes.dir" value="${build.dir}/@{symbolicName}-@{version}/classes"/>
             <local name="module.dist.dir"/>
-            <property name="module.dist.dir" value="${dist.dir}/@{symbolicName}"/>
+            <property name="module.dist.dir" value="${dist.dir}"/>
             <local name="module.dist.jar"/>
             <property name="module.dist.jar" value="${module.dist.dir}/@{symbolicName}-@{version}.jar"/>
-            <local name="module.temp"/>
+            <local name="bundle.temp.jar"/>
             <property name="@{outfileProperty}" value="${module.dist.jar}"/>
 
             <delete dir="${module.classes.dir}"/>
             <mkdir dir="${module.classes.dir}"/>
+
+            <!-- ================= -->
+            <!-- Javac as usual... -->
+            <!-- ================= -->
 
             <javac srcdir="@{src}" destdir="${module.classes.dir}"
                    source="${javac.source}" target="${javac.target}"
@@ -245,7 +270,7 @@
                 <compilerarg value="${javac.optional}"/>
                 <classpath>
                     <pathelement path="${module.classes.dir}"/>
-                    <path-args/>
+                    <classpaths/>
                     <path refid="default.path"/>
                 </classpath>
             </javac>
@@ -253,14 +278,112 @@
             <delete file="${module.dist.jar}"/>
             <mkdir dir="${module.dist.dir}"/>
 
-            <bnd files="@{bnd}" output="${module.dist.jar}"
+            <!-- ========================= -->
+            <!-- Let's build a OSGi Bundle -->
+            <!-- ========================= -->
+
+            <!--
+                We can't just create a jar at this point, because we
+                need a _bnd file_ to describe to Bnd Tool what to do.
+                The bnd file is much like a recipe. More info at:
+                http://bnd.bndtools.org/chapters/160-jars.html
+            -->
+
+            <!-- Creates simple bnd file if @bnd param set to auto -->
+            <local name="bnd.file"/>
+            <property name="bnd.file" value="${module.classes.dir}/bundle.bnd"/>
+            <if><equals arg1="@{bnd}" arg2="auto"/>
+                <then>
+                    <echo message="Bundle descriptor set to automatic"/>
+                    <echo file="${bnd.file}" append="false"
+                          message="### Start of generated content ###${line.separator}"/>
+                    <echo file="${bnd.file}" append="true"
+                          message="Bundle-Name: @{symbolicName}-@{version}${line.separator}"/>
+                    <echo file="${bnd.file}" append="true"
+                          message="Bundle-SymbolicName: @{symbolicName}${line.separator}"/>
+                    <echo file="${bnd.file}" append="true"
+                          message="Bundle-Version: @{version}${line.separator}"/>
+
+                    <!-- Magically extracts all used packages directly from compiled classes dir -->
+                    <local name="package.list"/>
+                    <listpackages dir="${module.classes.dir}" property="package.list"/>
+                    <echo file="${bnd.file}" append="true"
+                          message="Private-Package: ${package.list}${line.separator}"/>
+                </then>
+                <else>
+                    <copy file="@{bnd}" tofile="${bnd.file}" overwrite="true"/>
+                </else>
+            </if>
+
+            <!-- We may have a exports parameter -->
+            <if><not><equals arg1="@{exports}" arg2="void"/></not>
+                <then>
+                    <echo file="${bnd.file}" append="true"
+                          message="Export-Package: @{exports}${line.separator}"/>
+                </then>
+            </if>
+
+            <!--
+                At this point we have either a user-provided bnd file OR
+                a generated one. Now we are ready to create the OSGi bundle!
+            -->
+
+            <!-- Invokes the Bnd Tool task to create our jar bundle -->
+            <bnd files="${bnd.file}" output="${module.dist.jar}"
                  eclipse="false" failok="false" exceptions="true">
                 <classpath>
                     <pathelement path="${module.classes.dir}"/>
-                    <path-args/>
+                    <classpaths/>
                     <path refid="default.path"/>
                 </classpath>
             </bnd>
+
+            <!-- ================================ -->
+            <!-- Extra steps: Apply iPOJO tooling -->
+            <!-- ================================ -->
+
+            <if><istrue value="@{ipojo}"/>
+                <then>
+                    <ipojo input="${module.dist.jar}">
+                        <classpath>
+                            <pathelement path="${module.classes.dir}"/>
+                            <classpaths/>
+                            <path refid="default.path"/>
+                        </classpath>
+                    </ipojo>
+                </then>
+            </if>
+
+        </sequential>
+    </macrodef>
+
+    <macrodef name="build.module">
+        <attribute name="dir"/>
+        <attribute name="symbolicName"/>
+        <attribute name="version" default="0.0.0"/>
+        <attribute name="ipojo" default="true"/>
+        <attribute name="deploy" default="false"/>
+        <attribute name="exports" default="void"/><!-- TODO: Make an 'auto' which auto-exports all -->
+        <attribute name="outfileProperty" default="module.temp.jar"/>
+        <element name="classpath" optional="yes"/>
+        <sequential>
+            <local name="bnd.file"/>
+            <condition property="bnd.file" value="@{module.dir}/bundle.bnd" else="auto">
+                <available file="@{module.dir}/bundle.bnd"/>
+            </condition>
+
+            <local name="module.temp.jar"/>
+            <build.bundle bnd="${bnd.file}" src="@{dir}/src" exports="@{exports}" version="@{version}"
+                symbolicName="@{symbolicName}" outfileProperty="@{outfileProperty}">
+                <classpaths>
+                    <classpath/>
+                </classpaths>
+            </build.bundle>
+            <if><istrue value="@{deploy}"/>
+                <then>
+                    <deploy file="${@{outfileProperty}}"/>
+                </then>
+            </if>
         </sequential>
     </macrodef>
 

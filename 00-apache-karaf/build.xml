@@ -10,6 +10,23 @@
 
     <target name="build-runtime" depends="init">
 
+        <!--
+            Installs a clean Apache Karaf into stage.
+
+            To run Karaf use:
+                stage/bin/karaf
+            (To exit, hit Ctrl+D)
+
+            You may want to install WebConsole using:
+                feature:install webconsole
+
+            To access WebConsole navigate to: http://localhost:8181/system/console/
+            Both Username and password are simply 'karaf'.
+
+            Be sure to check latest instructions on:
+                https://karaf.apache.org/manual/latest/
+        -->
+
         <mkdir dir="${karaf.dist.dir}"/>
         <if><not><available file="${karaf.dist.dir}/${karaf.dist.zip}"/></not>
             <then>
