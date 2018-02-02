@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/BouncyCastle-1/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/SecurityLib/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/BouncyCastle-2/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Main-Private-Libraries/src" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" scope="PROVIDED" name="OSGi 5.0.0 (Core, Compendium, Enterprise)" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="iPOJO 1.12.1" level="project" />
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/BouncyCastle-1/private/bcprov-jdk15on-1.54.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+  </component>
+</module>

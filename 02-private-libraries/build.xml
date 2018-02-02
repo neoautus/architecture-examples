@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<project name="private-libraries" default="build-modules">
+
+    <import>
+        <fileset dir="${basedir}" includes="configure.xml"/>
+        <fileset dir=".." includes="configure.xml"/>
+    </import>
+
+    <target name="build-modules" depends="init">
+
+        <!--
+            These sources use ipojo feature on Apache Karaf.
+
+            To install ipojo on Karaf, use:
+                feature:repo-add http://repo1.maven.org/maven2/org/apache/felix/org.apache.felix.ipojo.features/1.12.1/org.apache.felix.ipojo.features-1.12.1.xml
+                feature:install ipojo-all
+        -->
+
+        <!-- ==================== -->
+        <!-- Build the interfaces -->
+        <!-- ==================== -->
+
+        <build.module dir="SecurityLib" symbolicName="SecurityLib" version="1.0"
+            exports="org.lucidj.securitylib;version=1.0.0"
+            deploy="true" outfileProperty="securitylib.jar"/>
+
+        <!-- ======================== -->
+        <!-- Build the twin libraries -->
+        <!-- ======================== -->
+
+        <build.module dir="BouncyCastle-1" symbolicName="BouncyCastle1" version="1.0" deploy="true">
+            <classpath>
+                <pathelement path="${securitylib.jar}"/>
+            </classpath>
+        </build.module>
+
+        <build.module dir="BouncyCastle-2" symbolicName="BouncyCastle2" version="1.0" deploy="true">
+            <classpath>
+                <pathelement path="${securitylib.jar}"/>
+            </classpath>
+        </build.module>
+
+        <!-- ==================================================================================== -->
+        <!-- Build Main, which uses BOTH services, each embedding different BouncyCastle versions -->
+        <!-- ==================================================================================== -->
+
+        <build.module dir="Main-Private-Libraries" symbolicName="Main-Private-Libraries" version="1.0" deploy="true">
+            <classpath>
+                <pathelement path="${securitylib.jar}"/>
+            </classpath>
+        </build.module>
+
+    </target>
+
+</project>
