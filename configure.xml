@@ -246,9 +246,12 @@
         <attribute name="ipojo" default="true"/>
         <attribute name="outfileProperty" default="bundle.temp.jar"/>
         <element name="classpaths" optional="yes"/>
+        <element name="privateClasspath" optional="yes"/>
         <sequential>
+            <local name="module.build.dir"/>
+            <property name="module.build.dir" value="${build.dir}/@{symbolicName}-@{version}"/>
             <local name="module.classes.dir"/>
-            <property name="module.classes.dir" value="${build.dir}/@{symbolicName}-@{version}/classes"/>
+            <property name="module.classes.dir" value="${module.build.dir}/classes"/>
             <local name="module.dist.dir"/>
             <property name="module.dist.dir" value="${dist.dir}"/>
             <local name="module.dist.jar"/>
@@ -259,20 +262,38 @@
             <delete dir="${module.classes.dir}"/>
             <mkdir dir="${module.classes.dir}"/>
 
+            <!-- ================================= -->
+            <!-- Embed private libraries/classpath -->
+            <!-- ================================= -->
+
+            <copy todir="${module.build.dir}/private" overwrite="true" flatten="true">
+                <fileset dir="@{src}" includes="-*"/><!-- just satisfy copy if no privateClasspath -->
+                <privateClasspath/>
+            </copy>
+
+            <path id="private.path">
+                <fileset dir="${module.build.dir}">
+                    <include name="private/**/*.jar"/>
+                </fileset>
+            </path>
+
             <!-- ================= -->
             <!-- Javac as usual... -->
             <!-- ================= -->
+
+            <path id="build.bundle.path">
+                <pathelement path="${module.classes.dir}"/>
+                <path refid="private.path"/>
+                <classpaths/>
+                <path refid="default.path"/>
+            </path>
 
             <javac srcdir="@{src}" destdir="${module.classes.dir}"
                    source="${javac.source}" target="${javac.target}"
                    debug="${javac.debug}" debuglevel="${javac.debuglevel}" deprecation="${javac.deprecation}"
                    includeantruntime="false">
                 <compilerarg value="${javac.optional}"/>
-                <classpath>
-                    <pathelement path="${module.classes.dir}"/>
-                    <classpaths/>
-                    <path refid="default.path"/>
-                </classpath>
+                <classpath refid="build.bundle.path"/>
             </javac>
 
             <delete file="${module.dist.jar}"/>
@@ -291,7 +312,7 @@
 
             <!-- Creates simple bnd file if @bnd param set to auto -->
             <local name="bnd.file"/>
-            <property name="bnd.file" value="${module.classes.dir}/bundle.bnd"/>
+            <property name="bnd.file" value="${module.build.dir}/bundle.bnd"/>
             <if><equals arg1="@{bnd}" arg2="auto"/>
                 <then>
                     <echo message="Bundle descriptor set to automatic"/>
@@ -309,6 +330,23 @@
                     <listpackages dir="${module.classes.dir}" property="package.list"/>
                     <echo file="${bnd.file}" append="true"
                           message="Private-Package: ${package.list}${line.separator}"/>
+
+                    <!-- Include private classpath if it exists -->
+                    <if><resourcecount refid="private.path" when="greater" count="0"/>
+                        <then>
+                            <!-- We need to cut-off the base directory and separate the list with ',' -->
+                            <local name="private.path.bnd"/>
+                            <pathconvert refid="private.path" property="private.path.bnd" dirsep="/" pathsep=",">
+                                <map from="${module.build.dir}/" to=""/>
+                            </pathconvert>
+                            <!-- Set the handy Bundle-ClassPath to include all embedded libraries -->
+                            <echo file="${bnd.file}" append="true"
+                                  message="Bundle-ClassPath: .,${private.path.bnd}${line.separator}"/>
+                            <!-- We need to include private/ as resource, so the libraries get included into bundle -->
+                            <echo file="${bnd.file}" append="true"
+                                  message="Include-Resource: private=private${line.separator}"/>
+                        </then>
+                    </if>
                 </then>
                 <else>
                     <copy file="@{bnd}" tofile="${bnd.file}" overwrite="true"/>
@@ -331,11 +369,7 @@
             <!-- Invokes the Bnd Tool task to create our jar bundle -->
             <bnd files="${bnd.file}" output="${module.dist.jar}"
                  eclipse="false" failok="false" exceptions="true">
-                <classpath>
-                    <pathelement path="${module.classes.dir}"/>
-                    <classpaths/>
-                    <path refid="default.path"/>
-                </classpath>
+                <classpath refid="build.bundle.path"/>
             </bnd>
 
             <!-- ================================ -->
@@ -345,11 +379,7 @@
             <if><istrue value="@{ipojo}"/>
                 <then>
                     <ipojo input="${module.dist.jar}">
-                        <classpath>
-                            <pathelement path="${module.classes.dir}"/>
-                            <classpaths/>
-                            <path refid="default.path"/>
-                        </classpath>
+                        <classpath refid="build.bundle.path"/>
                     </ipojo>
                 </then>
             </if>
@@ -378,6 +408,11 @@
                 <classpaths>
                     <classpath/>
                 </classpaths>
+                <privateClasspath>
+                    <fileset dir="@{dir}">
+                        <include name="private/**/*.jar"/>
+                    </fileset>
+                </privateClasspath>
             </build.bundle>
             <if><istrue value="@{deploy}"/>
                 <then>
