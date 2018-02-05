@@ -25,12 +25,12 @@ Every subdirectory have it's own `build.xml` and can be built independently.
 
 By default, Ant will download and cache all needed tools, then invoke the `build-all` target. The output of all builds will be located in `dist` directory.
 
-For details on building the documentation, see `ant -p`.
+For details on building the code, see `ant -p`.
 
 These are the available targets:
 
 * `ant build-all`: builds all available versions;
-* `ant clean`: removes the `dist` directory;
+* `ant clean`: removes the `build` and `dist` directories;
 * `ant zero`: same as `clean`, but also removes the `cache` directory with all downloaded tools.
 
 == Key Directories
@@ -39,6 +39,22 @@ Key directories to be aware of:
 
 * `cache` - stores the downloaded jars for the custom tasks and other tools
 * `dist` - the generated artifacts, where:
+
+== Installing Java on Raspberry Pi
+
+Raspberry Pi have a fully certified OpenJDK distribution available: https://www.azul.com/products/zulu-embedded/[Zulu® Embedded^], built by https://www.azul.com/[Azul Systems^]. You can install it on Raspbian Stretch using:
+
+....
+# apt-get install dirmngr
+# apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0x219BD9C9
+# echo 'deb http://repos.azulsystems.com/debian stable main' > /etc/apt/sources.list.d/zulu.list
+# apt-get update
+# apt-get install zulu-embedded-8
+# java -version
+openjdk version "1.8.0_152"
+OpenJDK Runtime Environment (Zulu Embedded 8.25.0.76-linux-aarch32hf) (build 1.8.0_152-b76)
+OpenJDK Client VM (Zulu Embedded 8.25.0.76-linux-aarch32hf) (build 25.152-b76, mixed mode, Evaluation)
+....
 
 == Important Resources
 
