@@ -19,19 +19,23 @@ package org.lucidj.bouncycastle;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
+import org.apache.felix.ipojo.annotations.Validate;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.lucidj.securitylib.SecurityLib;
+
+import java.security.Provider;
+import java.security.Security;
 
 @Component (immediate = true, publicFactory = false)
 @Instantiate
 @Provides
 public class BouncyCastle2 implements SecurityLib
 {
-    private BouncyCastleProvider bcprovider;
+    private Provider bcprovider;
 
     public BouncyCastle2 ()
     {
-        bcprovider = new BouncyCastleProvider ();
+        Security.addProvider (new BouncyCastleProvider ());
     }
 
     @Override
@@ -44,6 +48,12 @@ public class BouncyCastle2 implements SecurityLib
     public double getVersion ()
     {
         return (bcprovider.getVersion ());
+    }
+
+    @Validate
+    private void validate ()
+    {
+        bcprovider = Security.getProvider ("BC");
     }
 }
 
