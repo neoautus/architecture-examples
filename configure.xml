@@ -193,6 +193,23 @@
         </sequential>
     </macrodef>
 
+    <macrodef name="urlescape">
+        <attribute name="name"/>
+        <attribute name="value"/>
+        <sequential>
+            <loadresource property="@{name}">
+                <string value="@{value}"/>
+                <filterchain>
+                    <tokenfilter>
+                    <filetokenizer/>
+                        <!-- TODO: WHAT MORE? IS THERE A BETTER WAY?? -->
+                        <replacestring from=" " to="%20"/>
+                    </tokenfilter>
+                </filterchain>
+            </loadresource>
+        </sequential>
+    </macrodef>
+
     <macrodef name="deploy">
         <attribute name="file"/>
         <sequential>
@@ -203,6 +220,18 @@
                     <copy file="@{file}" todir="${deploy.dir}"
                         overwrite="true" taskname="deploy"/>
                 </then>
+                <else>
+                    <if><http url="http://localhost:8181/~localsvc/deploy"/>
+                        <then>
+                            <echo taskname="deploy" message="Remote deploy: @{file}"/>
+                            <local name="file.location"/>
+                            <urlescape name="file.location" value="@{file}"/>
+                            <concat taskname="deploy">
+                                <url url="http://localhost:8181/~localsvc/deploy?file:${file.location}"/>
+                            </concat>
+                        </then>
+                    </if>
+                </else>
             </if>
         </sequential>
     </macrodef>
