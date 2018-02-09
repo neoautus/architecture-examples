@@ -6,6 +6,9 @@
       <item index="0" class="java.lang.String" itemvalue="org.apache.felix.ipojo.annotations.Component" />
     </list>
   </component>
+  <component name="IvyProjectSettings">
+    <dependencies />
+  </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
