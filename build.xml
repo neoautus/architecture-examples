@@ -3,6 +3,10 @@
 
     <import file="configure.xml"/>
 
+    <target name="build-stage">
+        <subant antfile="00-apache-karaf/build-stage.xml"/>
+    </target>
+
     <target name="build-all">
         <iterate target=""/>
     </target>
