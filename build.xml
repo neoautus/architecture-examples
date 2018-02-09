@@ -4,7 +4,7 @@
     <import file="configure.xml"/>
 
     <target name="build-stage">
-        <subant antfile="00-apache-karaf/build-stage.xml"/>
+        <subant antfile="build-stage.xml" buildpath="${basedir}/00-apache-karaf"/>
     </target>
 
     <target name="build-all">

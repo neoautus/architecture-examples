@@ -152,9 +152,13 @@
     </target>
 
     <target name="zero" depends="clean"
-        description="Clear all build artifacts created by the project AND all cached dependencies.">
+        description="Clear all build artifacts created by the project AND the stage.">
         <delete dir="${stage.dir}"/>
+    </target>
+
+    <target name="configure" depends="zero">
         <delete dir="${cache.dir}"/>
+        <ant target="init" inheritall="false"/>
     </target>
 
     <!-- Wrap any jar more or less like wrap: protocol -->
