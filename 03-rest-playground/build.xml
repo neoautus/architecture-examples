@@ -9,7 +9,9 @@
     <target name="getlibs" depends="configure.getlibs">
 
         <property name="jersey.release" value="2.26"/>
-        <property name="packaging.type" value="jar"/><!-- Workaround javax.ws.rs:javax.ws.rs-api:2.1 -->
+
+        <!-- Workaround javax.ws.rs:javax.ws.rs-api:2.1 - https://github.com/jax-rs/api/issues/572 -->
+        <property name="packaging.type" value="jar"/>
 
         <resolvePath id="jersey/lib">
             <dependency org="org.glassfish.jersey.containers" name="jersey-container-servlet-core" rev="${jersey.release}"/>
