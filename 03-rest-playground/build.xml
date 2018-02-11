@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<project name="rest-playground" default="build-modules">
+
+    <import>
+        <fileset dir="${basedir}" includes="configure.xml"/>
+        <fileset dir=".." includes="configure.xml"/>
+    </import>
+
+    <target name="getlibs" depends="configure.getlibs">
+
+        <property name="jersey.release" value="2.26"/>
+        <property name="packaging.type" value="jar"/><!-- Workaround javax.ws.rs:javax.ws.rs-api:2.1 -->
+
+        <resolvePath id="jersey/lib">
+            <dependency org="org.glassfish.jersey.containers" name="jersey-container-servlet-core" rev="${jersey.release}"/>
+            <dependency org="org.glassfish.jersey.containers" name="jersey-container-servlet" rev="${jersey.release}"/>
+            <dependency org="javax.persistence" name="javax.persistence-api" rev="2.2"/>
+            <!-- Needed on Jersey 2.6+ -->
+            <dependency org="org.glassfish.jersey.inject" name="jersey-hk2" rev="${jersey.release}"/>
+        </resolvePath>
+
+    </target>
+
+    <target name="deploy-jersey" depends="init">
+        <!-- Deploy Jersey jars to container -->
+        <for param="bundle.file">
+            <path refid="jersey/lib"/>
+            <sequential>
+                <deploy file="@{bundle.file}"/>
+            </sequential>
+        </for>
+    </target>
+
+    <target name="build-modules" depends="init">
+
+        <build.module dir="JerseyService" symbolicName="JerseyService" version="1.0" deploy="true">
+            <classpath>
+                <path refid="jersey/lib"/>
+            </classpath>
+        </build.module>
+
+    </target>
+
+</project>

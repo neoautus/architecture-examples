@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/01-library-version/01-library-version.iml" filepath="$PROJECT_DIR$/01-library-version/01-library-version.iml" />
       <module fileurl="file://$PROJECT_DIR$/02-private-libraries/02-private-libraries.iml" filepath="$PROJECT_DIR$/02-private-libraries/02-private-libraries.iml" />
+      <module fileurl="file://$PROJECT_DIR$/03-rest-playground/03-rest-playground.iml" filepath="$PROJECT_DIR$/03-rest-playground/03-rest-playground.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/architecture-examples.iml" filepath="$PROJECT_DIR$/.idea/architecture-examples.iml" />
       <module fileurl="file://$PROJECT_DIR$/bootstrap/bootstrap.iml" filepath="$PROJECT_DIR$/bootstrap/bootstrap.iml" />
     </modules>
