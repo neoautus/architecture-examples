@@ -156,7 +156,7 @@
         <delete dir="${stage.dir}"/>
     </target>
 
-    <target name="configure" depends="zero">
+    <target name="configure">
         <delete dir="${cache.dir}"/>
         <ant target="init" inheritall="false"/>
     </target>
@@ -167,6 +167,7 @@
     <macrodef name="wrapjar">
         <attribute name="src"/>
         <attribute name="dest"/>
+        <attribute name="excludes" default="!javax.*"/>
         <sequential>
             <basename property="src.basename" file="@{src}" suffix=".jar"/>
             <propertyregex property="bsn" input="${src.basename}"
@@ -182,7 +183,7 @@
                 Bundle-Name: wrapped-${bsn}
                 Bundle-Version: ${version}
                 Import-Package: *;resolution:=optional
-                Export-Package: !javax.*,*;version=${version}
+                Export-Package: @{excludes},*;version=${version}
             </echo>
             <bnd files="${output.bnd}" output="${output.jar}"
                     eclipse="false" failok="false" exceptions="true">
