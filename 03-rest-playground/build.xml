@@ -33,13 +33,26 @@
         </for>
     </target>
 
-    <target name="build-modules" depends="init">
+    <target name="build-hello" depends="init">
+        <build.module dir="HelloService" symbolicName="HelloService" version="1.0" deploy="true">
+            <classpath>
+                <path refid="jersey/lib"/>
+            </classpath>
+        </build.module>
+    </target>
 
+    <target name="build-jersey" depends="init">
         <build.module dir="JerseyService" symbolicName="JerseyService" version="1.0" deploy="true">
             <classpath>
                 <path refid="jersey/lib"/>
             </classpath>
         </build.module>
+    </target>
+
+    <target name="build-modules" depends="init">
+
+        <antcall target="build-hello"/>
+        <antcall target="build-jersey"/>
 
     </target>
 

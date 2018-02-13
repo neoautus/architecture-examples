@@ -14,20 +14,25 @@
  * the License.
  */
 
-package org.lucidj.jerseyservice;
+package org.lucidj.helloservice;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import org.apache.felix.ipojo.annotations.Component;
+import org.apache.felix.ipojo.annotations.Instantiate;
+import org.apache.felix.ipojo.annotations.Provides;
+import org.glassfish.jersey.server.ResourceConfig;
 
-@Path ("/status")
-public class ServiceStatus
+import javax.ws.rs.ApplicationPath;
+
+@ApplicationPath ("/hello")
+@Component (immediate = true, publicFactory = false)
+@Instantiate
+@Provides
+public class HelloConfig extends ResourceConfig
 {
-    @GET
-    @Produces ("text/plain")
-    public String getStatus ()
+    public HelloConfig ()
     {
-        return ("Running\n");
+        // Register resources and providers using package-scanning
+        packages (getClass ().getPackage ().getName ());
     }
 }
 

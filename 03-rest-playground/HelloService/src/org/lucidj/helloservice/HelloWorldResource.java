@@ -14,20 +14,21 @@
  * the License.
  */
 
-package org.lucidj.jerseyservice;
+package org.lucidj.helloservice;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-@Path ("/status")
-public class ServiceStatus
+@Path ("helloWorld")
+public class HelloWorldResource
 {
+    // Test URL: http://localhost:8181/services/hello/helloWorld
     @GET
     @Produces ("text/plain")
-    public String getStatus ()
+    public String sayHello ()
     {
-        return ("Running\n");
+        return ("Hello World!\n");
     }
 }
 
