@@ -29,6 +29,7 @@ For details on building the code, see `ant -p`.
 
 These are the available targets:
 
+* `ant stage`: build the stage with Apache Karaf ready to run the examples
 * `ant build-all`: builds all available versions;
 * `ant clean`: removes the `build` and `dist` directories;
 * `ant zero`: same as `clean`, but also removes the `cache` directory with all downloaded tools.
