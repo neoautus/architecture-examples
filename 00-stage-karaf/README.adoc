@@ -12,6 +12,7 @@
 // WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 // License for the specific language governing permissions and limitations under
 // the License.
+:experimental:
 
 You can use Apache Karaf to test all examples in this project. This sub-project makes a full Karaf installation, downloading it and unpackaging Karaf inside the `stage` directory. You can rebuild the stage as many times you want.
 
