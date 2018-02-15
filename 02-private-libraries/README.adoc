@@ -39,10 +39,10 @@ If you want to use the integrated Karaf, you can follow https://github.com/neoau
 You will see the log messages below:
 
 ....
-(...) Main-Private-Libraries - 1.0.0 | Currently we have 2 registered security libraries
-(...) Main-Private-Libraries - 1.0.0 | Library #0: org.lucidj.bouncycastle.BouncyCastle2@xxxxxxxx info=BouncyCastle Security Provider v1.59
-(...) Main-Private-Libraries - 1.0.0 | Library #1: org.lucidj.bouncycastle.BouncyCastle1@yyyyyyyy info=BouncyCastle Security Provider v1.54
-(...) Main-Private-Libraries - 1.0.0 | Validate: Hello!
+(...) Currently we have 2 registered security libraries
+(...) Library #0: org.lucidj.bouncycastle.BouncyCastle2@xxxxxxxx info=BouncyCastle Security Provider v1.59
+(...) Library #1: org.lucidj.bouncycastle.BouncyCastle1@yyyyyyyy info=BouncyCastle Security Provider v1.54
+(...) Validate: Hello!
 ....
 
 === Explanation
