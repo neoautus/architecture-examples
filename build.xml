@@ -7,6 +7,18 @@
         <subant antfile="build-stage.xml" buildpath="${basedir}/00-stage-karaf"/>
     </target>
 
+    <target name="build-library-version">
+        <subant buildpath="${basedir}/01-library-version"/>
+    </target>
+
+    <target name="build-private-libraries">
+        <subant buildpath="${basedir}/02-private-libraries"/>
+    </target>
+
+    <target name="build-rest-playground">
+        <subant buildpath="${basedir}/03-rest-playground"/>
+    </target>
+
     <target name="build-all">
         <iterate target=""/>
     </target>
