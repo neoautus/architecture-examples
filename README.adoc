@@ -15,7 +15,7 @@
 
 This is the source code for the architectural examples cited on https://github.com/neoautus/lucidj-docs/blob/master/docs/README.adoc[LucidJ Documentation].
 
-Every subdirectory have it's own `build.xml` and can be built independently.
+IMPORTANT: *Please be sure to check the documentation inside every subproject (the numerated directories). Every subdirectory have it's own instructions, `build.xml` and can be built independently.*
 
 == Prerequisites for Building
 
