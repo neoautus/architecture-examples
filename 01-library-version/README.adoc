@@ -1,0 +1,53 @@
+= Library Versioning
+// Copyright 2017 NEOautus Ltd. (http://neoautus.com)
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not
+// use this file except in compliance with the License. You may obtain a copy of
+// the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+// License for the specific language governing permissions and limitations under
+// the License.
+
+=== A Way Out of Jar Hell
+
+Every Java programmer have dealt, at some level, with classpaths and some of it's issues. Sometimes it's the puzzle-like effort to satisfy dependencies from poorly documented Jars, or even well documented libraries, which have some compatibilities issues with others.
+
+The stacked, linear order of classpath, sometimes forces us to rebuild Jars or even "repackage" it within our own Jars.
+
+Let's be clear: this is wrong.
+
+In a better world, you should not need to do this. Things like these are a burden for the deployer, and they are this way because of 1) lack of proper versioning on the Jars (in the traditional Java) and 2) lack of proper tools to handle the mix-match of libraries.
+
+OSGi solves both. The majority of Java libraries available, like Spring or Hibernate, are OSGi-aware or even have OSGi-specific functionalities.
+
+=== Example Description
+
+This example shows how 2 different versions of the same library can work together in an OSGi environment. Specially, we demonstrate how different modules can be built against different library versions and keep the versioning at runtime.
+
+=== Building
+
+If you want to use the integrated Karaf, you can follow https://github.com/neoautus/architecture-examples/tree/master/00-stage-karaf[these instructions to build the Karaf stage].
+
+* Run `ant build-library-version` from the example root *OR*
+* Run `ant` from the subproject directory.
+
+=== Testing
+
+* After building, if you are using the provided Karaf stage, the bundles are already copied into `deploy` directory and are ready to be deployed. If Karaf is running, they are *already deployed*;
+* If you wish to test on another systems, the Jars you need are available in `01-library-version/dist` directory;
+* You will see the log message: `VALIDATE! client10='Client 1.0 gets 'Hello from SimpleLib 1.0' from SimpleLib' client20='Client 2.0 gets 'Hello from SimpleLib 2.0' from SimpleLib'`
+
+=== Explanation
+
+We have two different versions of the same library SimpleLib. Client10 was compiled against the version 1.0 and Client20 was compiled against version 2.0 of SimpleLib. When the bundles are build, the versioning information is stored, allowing the correct client to call the proper version of SimpleLib.
+
+They also coexist in peace. The bundle Main calls services from both Client10 and Client20, being able to build a message using methods from _both_ SimpleLib bundles.
+
+== Copyright
+
+This work is licensed under a http://www.apache.org/licenses/LICENSE-2.0[Apache License, Version 2.0].
