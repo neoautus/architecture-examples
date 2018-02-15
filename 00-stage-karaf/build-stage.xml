@@ -38,17 +38,15 @@
         </if>
 
         <!-- Apache Karaf is unziped first so it can be overwritten if needed -->
-        <if><not><available file="${stage.dir}" type="dir"/></not>
-            <then>
-                <unzip src="${karaf.dist.dir}/${karaf.dist.zip}" dest="${stage.dir}">
-                    <cutdirsmapper dirs="1"/>
-                </unzip>
+        <delete dir="${stage.dir}" quiet="true"/>
+        <unzip src="${karaf.dist.dir}/${karaf.dist.zip}" dest="${stage.dir}">
+            <cutdirsmapper dirs="1"/>
+        </unzip>
 
-                <propertyfile file="${stage.dir}/stage.properties">
-                    <entry key="deploy.dir" value="${stage.dir}/deploy"/>
-                </propertyfile>
-            </then>
-        </if>
+        <!-- Store the deployment location we should use -->
+        <propertyfile file="${stage.dir}/stage.properties">
+            <entry key="deploy.dir" value="${stage.dir}/deploy"/>
+        </propertyfile>
 
         <!-- Make /bin/* +x since we get Karaf from .zip -->
         <chmod perm="ug+rx">
@@ -57,7 +55,7 @@
                 <exclude name="**/*.bat"/>
             </fileset>
         </chmod>
-        
+
     </target>
 
 </project>
