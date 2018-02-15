@@ -17,15 +17,18 @@ You can use Apache Karaf to test all examples in this project. This sub-project 
 
 Once available, the `stage` will be used as deployment target automatically by all other sub-projects available. All created Jars will be copied automatically inside `stage/deploy`. If you want to change this, please remove or edit the property file `stage/deploy.properties`.
 
+TIP: You can run Apache Karaf on _Raspberry Pi_. You just need a compatible JDK. See <<Installing Java on Raspberry Pi>> for instructions to install Azul's Zulu OpenJDK.
+
 === Description
 
 * Apache Karaf will be downloaded from it's site: https://karaf.apache.org/
-* The install file will be cached inside `cache` directory;
+* The Karaf install file (usually a .zip) will be cached inside `cache/apache-karaf` directory;
 * Any previous `stage` will be *completelly removed*;
 * A new `stage` is built, with Apache Karaf unzipped inside it;
-* A file `stage/deploy.properties` is created, directing Ant to deploy all Jars on Karaf.
+* A file `stage/deploy.properties` is created, directing Ant to deploy all Jars into Karaf.
 
-TIP: You can run Apache Karaf on _Raspberry Pi_. You just need a compatible JDK. See <<Installing Java on Raspberry Pi>> for instructions to install Azul's Zulu OpenJDK.
+TIP: You can change `deploy.properties` to point to any directory you like, so your bundles can be automatically deployed into another OSGi container elsewhere. Set the directory using: +
+`deploy.dir=<the full path you want>`
 
 === How to Build
 
@@ -41,7 +44,7 @@ You will need to install *WebConsole* and *iPOJO* manually.
 ....
 $ stage/bin/karaf
 ....
-2) Run the Karaf shell commands:
+2) Run the following Karaf shell commands:
 ....
 karaf@root()> feature:install webconsole
 karaf@root()> feature:repo-add http://repo1.maven.org/maven2/org/apache/felix/org.apache.felix.ipojo.features/1.12.1/org.apache.felix.ipojo.features-1.12.1.xml
@@ -49,12 +52,12 @@ karaf@root()> feature:install ipojo-all
 ....
 
 TIP: To access WebConsole navigate to: http://localhost:8181/system/console/.
-Both Username and password are simply 'karaf'.
+Both username and password are simply `karaf`.
 
 === Testing
 
 * To start Karaf in shell mode use: `stage/bin/karaf`
-* To start command mode Karaf, simple hit Ctrl+D;
+* To exit Karaf shell, simply hit: kbd:[Ctrl+D]
 * To start Karaf in daemon mode use: `stage/bin/start`
 * To stop Karaf daemon use: `stage/bin/stop`
 * The Karaf log file is located at: `stage/data/log/karaf.log`
