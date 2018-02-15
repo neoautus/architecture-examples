@@ -19,27 +19,48 @@ Every subdirectory have it's own `build.xml` and can be built independently.
 
 == Prerequisites for Building
 
+* Java Development Kit 8 or later
 * Ant (minimun Ant 1.8.0)
 
-== Building the Examples
+== Before Starting
 
-By default, Ant will download and cache all needed tools, then invoke the `build-all` target. The output of all builds will be located in `dist` directory.
+The examples were built to illustrate both functionality and implementation. They are IDE-agnostic, showing all the steps to build an OSGi application from zero without need of a particular combination of IDE and plugin or any wizzard tool.
+
+We achieve this using Ant. Today, you can also use Maven to build any OSGi project, however Maven is magical in it's own way, because there are many predefined (and sane) defaults. You may choose Maven for your own projects. On the other side, Ant allows you to follow the logic of building an OSGi jar file, with all required steps very visible. We strongly suggest you to take a time to look into build.xml and configure.xml to get a good idea of whats going on, and how things are being done. It may look intimidating at first, but hopefully will also be instructive.
+
+Specially, you will get known to Bnd (http://bndtools.org/), which is *the* reference tool to build all OSGi-related stuff you can imagine. There's also the iPojo processor, which manipulates the code after compilation and demonstrates the post-processing of OSGi jar bundles.
+
+=== Building
+
+*This project can download and create a local install of Apache Karaf for you.* If you want to use the integrated Karaf, you can follow https://github.com/neoautus/architecture-examples/tree/master/00-stage-karaf[these instructions to build the Karaf stage].
+
+To build _all_ subprojects at once, just type `ant` on project root.
+
+By default, Ant will download and cache all needed tools, then invoke the `build-all` target. The output of all builds will be located in `dist/` directory beneath every subproject. If you're using the Karaf stage, all bundles will also be deployed into Karaf.
+
+=== Useful Ant targets
 
 For details on building the code, see `ant -p`.
 
 These are the available targets:
 
-* `ant stage`: build the stage with Apache Karaf ready to run the examples
-* `ant build-all`: builds all available versions;
+* `ant build-stage`: build the stage with Apache Karaf ready to run the examples
+* `ant build-library-version`: build the Library Versioning subproject;
+* `ant build-private-libraries`: build the Private Libraries subproject;
+* `ant build-rest-playground`: build the Rest Playground subproject;
+* `ant build-all`: builds all available subprojects;
 * `ant clean`: removes the `build` and `dist` directories;
-* `ant zero`: same as `clean`, but also removes the `cache` directory with all downloaded tools.
+* `ant zero`: same as `clean`, but also removes the `cache` directory with all downloaded tools;
+* `ant configure`: rebuild the library and tools cache.
 
-== Key Directories
+== Key Directories and Files
 
-Key directories to be aware of:
+Important directories to be aware of:
 
-* `cache` - stores the downloaded jars for the custom tasks and other tools
-* `dist` - the generated artifacts, where:
+* `cache` - stores the downloaded jars, custom tasks and other tools;
+* `stage` - the local Apache Karaf installation built to test the subprojects.
+
+The `configure.xml` file contains all the macros and targets used by the subprojects and it's worth looking. It can be used standalone on another projects.
 
 == Installing Java on Raspberry Pi
 
