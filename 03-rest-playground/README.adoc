@@ -13,11 +13,11 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-=== Dynamic Services and Interfaces
+== Dynamic Services and Interfaces
 
 The goal of this example is to demonstrate the effective use of services, with a real-world use case based on JAX-RS & Jersey. The example is composed by a JAX-RS server (using Jersey) and a sample JAX-RS resource (called HelloService). The two components can be built and deployed independently, making possible to explore the development cycle with a live OSGi container and the services.
 
-=== Example Description
+== Example Description
 
 Having RESTful services is a frequent requirement for many systems. They are covered by the JAX-RS standard (JSR 311 & JSR 339), meaning that we have a set of standard classes and interfaces, and many frameworks.
 
@@ -25,7 +25,7 @@ Here we use *Jersey Framework*, which is _the JAX-RS Reference Implementation_. 
 
 This example also includes the component _HelloService_, which shows how to create a dynamic, pluggable JAX-RS Application (or `ResourceConfig`, using Jersey terminology).
 
-=== Building
+== Building
 
 If you want to use the integrated Karaf, you can follow https://github.com/neoautus/architecture-examples/tree/master/00-stage-karaf[these instructions to build the Karaf stage].
 
@@ -35,7 +35,7 @@ or
 
 * Run `ant` from the subproject directory.
 
-=== Testing
+== Testing
 
 * After building, if you are using the provided Karaf stage, the bundles are already copied into `deploy` directory and are ready to be deployed. If Karaf is running, they are *already deployed*;
 * If you wish to test on another systems, the Jars you need are available in `03-rest-playground/dist` directory;
@@ -56,15 +56,15 @@ $ curl http://localhost:8181/services/hello/helloMars/Shakespeare
 Hello from Mars, Shakespeare
 ....
 
-=== Explanation
+== Explanation
 
 We have a lot going on here. First let's analyze the test bundle *HelloService*. It might seem that we're starting backwards (and we are), but it's useful to know what's inside a JAX-RS resource bundle _before_ seeing what the *JerseyService* is doing with it.
 
-==== The Bundle HelloService
+=== The Bundle HelloService
 
 The bundle *HelloService* illustrates a JAX-RS component. The main configuration is defined inside the class `HelloConfig` which sets both JAX-RS and OSGi features.
 
-===== Class HelloConfig
+==== Class HelloConfig
 
 Starting with OSGi features, the annotations `@Component`, `@Instantiate` and `@Provides` are used to 1) declare a *_component_* class; 2) Use that class to *_instantiate_* and register an object; and finally 3) publish the object as a _service_ which *_provides_* the interface `ResourceConfig`. This makes the `HelloConfig` object instance _"magically"_ visible to `JerseyService`.
 
@@ -88,7 +88,7 @@ public class HelloConfig extends ResourceConfig
 
 For JAX-RS features, the class defines `@ApplicationPath` as `/hello`. This instructs Jersey to deploy a new JAX-RS servlet on `/services/hello`, directing RESTful requests to this bundle. The method `packages()` also tells Jersey to look for resources on classes belonging to package `org.lucidj.helloservice`. Let's take a look at the classes it will discover, `HelloWorldResource` and `HelloMarsResource`.
 
-===== Class HelloWorldResource
+==== Class HelloWorldResource
 
 The class `HelloWorldResource` is defined as follows:
 
@@ -113,7 +113,7 @@ $ curl http://localhost:8181/services/hello/helloWorld
 Hello world!
 ....
 
-===== Class HelloMarsResource
+==== Class HelloMarsResource
 
 The class `HelloMarsResource` shows a little more JAX-RS features, like a variable `name` inside a URI path template:
 
@@ -141,13 +141,13 @@ Hello from Mars, Shakespeare
 
 Notice that we are on plain, familiar JAX-RS territory. You can do whatever you want, use any Jersey or JAX-RS features you wish.
 
-==== The Bundle JerseyService
+=== The Bundle JerseyService
 
 This bundle tracks and instantiates JAX-RS resources and uses a lot more OSGi features, because here we actually do some component gluing. We will focus on OSGi, since here Jersey works as usual.
 
 Please refer to `JerseyService.java` full source code to have a broader view. We will analyze parts of the code, always focusing on specific features.
 
-===== JerseyService as OSGi Component
+==== JerseyService as OSGi Component
 
 [source,Java]
 ----
@@ -158,7 +158,7 @@ public class JerseyService
 
 The class `JerseyService` is declared here as an OSGi component. Notice however that, even tough the class is instantiated, the object is _never_ published as service. In fact, this component doesn't have to publish services, since it's already "publishing" the Jersey servlets, so to speak.
 
-===== Importing a Service with `@Requires`
+==== Importing a Service with `@Requires`
 
 [source,Java]
 ----
@@ -170,7 +170,7 @@ The annotation `@Requires` marks a variable which will be injected with a servic
 
 Notice that `@Requires` also creates an explicit _dependency_ of the required service. The service is needed for this component to start, and if the service goes away or changes, this component is updated.
 
-===== Tracking Services using `@Bind` and `@Unbind`
+==== Tracking Services using `@Bind` and `@Unbind`
 
 [source,Java]
 ----
@@ -197,7 +197,7 @@ The JAX-RS resources are tracked using their interface `javax.ws.rs.core.Configu
 
 Since one of the classes that implement `Configurable` is `ResourceConfig`, we keep track of these specific Jersey resources, publishing or removing the Jersey servlets as needed.
 
-===== Service Life-cycle with `@Validate` and `@Invalidate`
+==== Service Life-cycle with `@Validate` and `@Invalidate`
 
 [source,Java]
 ----
@@ -218,7 +218,7 @@ These annotations mark the service life-cycle. When a Java object is published a
 
 The `@Validate` and `@Invalidate` annotations designate which methods will be called once the object is ready (for instance, when all it's service `@Requires` are satisfied) and when the object should do it's cleanup, like when the bundle is being deactivated.
 
-=== Notes
+== Notes
 
 This subproject illustrates a simple yet functional JAX-RS component. It's important to explore and understand it, because we have here all the foundations of much more complex components.
 
