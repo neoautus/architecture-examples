@@ -15,15 +15,15 @@
 
 === Dynamic Services and Interfaces
 
-The goal of this example is to demonstrate the effective use of services, with a real-world use case based on JAX-RS & Jersey. The example is composed by a JAX-RS server (using Jersey) and a sample JAX-RS resource (called HelloService). The two components can be build and deployed independently, making possible to explore how a development cycle can work against a live OSGi container and live services, and how we can redeploy a service that have active components plugged-in.
+The goal of this example is to demonstrate the effective use of services, with a real-world use case based on JAX-RS & Jersey. The example is composed by a JAX-RS server (using Jersey) and a sample JAX-RS resource (called HelloService). The two components can be built and deployed independently, making possible to explore the development cycle with a live OSGi container and the services.
 
 === Example Description
 
-RESTful services are a feature often requested in many systems. They are covered by the JAX-RS standard (JSR 311 & JSR 339), meaning that we have a set of standard classes and interfaces, implemented in many frameworks.
+Having RESTful services is a frequent requirement for many systems. They are covered by the JAX-RS standard (JSR 311 & JSR 339), meaning that we have a set of standard classes and interfaces, and many frameworks.
 
-We use *Jersey Framework*, which is _the JAX-RS Reference Implementation_. It offers a number of utilities, extensions and have it's own API with additional features. The component _JerseyService_ exposes Jersey & JAX-RS using servlet `/services`, and offers a simple status check on `/services/status`.
+Here we use *Jersey Framework*, which is _the JAX-RS Reference Implementation_. It offers a number of utilities, extensions and have it's own API with additional features. The component _JerseyService_ exposes Jersey & JAX-RS using servlet `/services`, and offers a simple status check on `/services/status`.
 
-This example also includes other component called _HelloService_, which shows how to create a dynamic, pluggable JAX-RS Application (or `ResourceConfig`, using Jersey terminology).
+This example also includes the component _HelloService_, which shows how to create a dynamic, pluggable JAX-RS Application (or `ResourceConfig`, using Jersey terminology).
 
 === Building
 
