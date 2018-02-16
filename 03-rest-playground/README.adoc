@@ -15,7 +15,7 @@
 
 === Dynamic Services and Interfaces
 
-The goal of this example is to demonstrate the effective use of services, with a real-world use case: JAX-RS and Jersey. The two components can be build and deployed independently, making possible to explore how a development cycle can work against a live OSGi container and live services, and how we can redeploy a service that have active components plugged-in.
+The goal of this example is to demonstrate the effective use of services, with a real-world use case based on JAX-RS & Jersey. The example is composed by a JAX-RS server (using Jersey) and a sample JAX-RS resource (called HelloService). The two components can be build and deployed independently, making possible to explore how a development cycle can work against a live OSGi container and live services, and how we can redeploy a service that have active components plugged-in.
 
 === Example Description
 
