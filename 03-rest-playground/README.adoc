@@ -1,4 +1,4 @@
-= Private Libraries
+= Rest Playground
 // Copyright 2017 NEOautus Ltd. (http://neoautus.com)
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -13,45 +13,214 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-=== Keeping Jars Private
+=== Dynamic Services and Interfaces
 
-The OSGi specification allows a fine grained control of what packages are visible or requested, using special Manifest properties. Sometimes, however, we don't have a compliant library. We have just a plain, regular Jar file. What to do? We have 2 options:
-
-. Wrap the Jar, like http://bnd.bndtools.org/chapters/390-wrapping.html[Wrapping Libraries to OSGi Bundles] describes;
-. Use a *Private Classpath*, with the rogue Jar contained inside.
+The goal of this example is to demonstrate the effective use of services, with a real-world use case: JAX-RS and Jersey. The two components can be build and deployed independently, making possible to explore how a development cycle can work against a live OSGi container and live services, and how we can redeploy a service that have active components plugged-in.
 
 === Example Description
 
-This example uses the famous BouncyCastle security library. _For didactic purposes, we are ignoring that BouncyCastle is fully OSGi-aware, and we're treating it like a plain Jar library._ We build two services, BouncyCastle-1 and BouncyCastle-2, each using a *different version of BouncyCastle* inside it's own *private classpath*.
+RESTful services are a feature often requested in many systems. They are covered by the JAX-RS standard (JSR 311 & JSR 339), meaning that we have a set of standard classes and interfaces, implemented in many frameworks.
+
+We use *Jersey Framework*, which is _the JAX-RS Reference Implementation_. It offers a number of utilities, extensions and have it's own API with additional features. The component _JerseyService_ exposes Jersey & JAX-RS using servlet `/services`, and offers a simple status check on `/services/status`.
+
+This example also includes other component called _HelloService_, which shows how to create a dynamic, pluggable JAX-RS Application (or `ResourceConfig`, using Jersey terminology).
 
 === Building
 
 If you want to use the integrated Karaf, you can follow https://github.com/neoautus/architecture-examples/tree/master/00-stage-karaf[these instructions to build the Karaf stage].
 
-* Run `ant build-private-libraries` from the example root *OR*
+* Run `ant build-rest-playground` from the example root;
++
+or
+
 * Run `ant` from the subproject directory.
 
 === Testing
 
 * After building, if you are using the provided Karaf stage, the bundles are already copied into `deploy` directory and are ready to be deployed. If Karaf is running, they are *already deployed*;
-* If you wish to test on another systems, the Jars you need are available in `02-private-libraries/dist` directory;
+* If you wish to test on another systems, the Jars you need are available in `03-rest-playground/dist` directory;
 
-You will see the log messages below:
+The bundle *JerseyService* will register a servlet using the alias `/services` and also a dummy resource `/status`. You will be able to open the URL `http://localhost:8181/services/status` on any navigator, or use a command line util like `curl` to run a test:
 
 ....
-(...) Currently we have 2 registered security libraries
-(...) Library #0: org.lucidj.bouncycastle.BouncyCastle2@xxxxxxxx info=BouncyCastle Security Provider v1.59
-(...) Library #1: org.lucidj.bouncycastle.BouncyCastle1@yyyyyyyy info=BouncyCastle Security Provider v1.54
-(...) Validate: Hello!
+$ curl http://localhost:8181/services/status
+Running
+....
+
+We have also the test bundle *HelloService*. It will be tracked by *JerseyService*, which will publish the resources on two different URLs, giving results like these:
+
+....
+$ curl http://localhost:8181/services/hello/helloWorld
+Hello world!
+$ curl http://localhost:8181/services/hello/helloMars/Shakespeare
+Hello from Mars, Shakespeare
 ....
 
 === Explanation
 
-We have two complete, different versions of BouncyCastle: version 1.54 and version 1.59. _They are only visible inside the bundles where they belong_, inside their private classpath. Also, notice while BouncyCastle-1 uses the library classes directly, BouncyCastle-2 uses it through JCE Provider, just as example.
+We have a lot going on here. First let's analyze the test bundle *HelloService*. It might seem that we're starting backwards (and we are), but it's useful to know what's inside a JAX-RS resource bundle _before_ seeing what the *JerseyService* is doing with it.
 
-As expected, both services are running together without any hitch.
+==== The Bundle HelloService
 
-TIP: This example also demonstrates proper OSGi service usage, with the services implementing a common _interface_.
+The bundle *HelloService* illustrates a JAX-RS component. The main configuration is defined inside the class `HelloConfig` which sets both JAX-RS and OSGi features.
+
+===== Class HelloConfig
+
+Starting with OSGi features, the annotations `@Component`, `@Instantiate` and `@Provides` are used to 1) declare a *_component_* class; 2) Use that class to *_instantiate_* and register an object; and finally 3) publish the object as a _service_ which *_provides_* the interface `ResourceConfig`. This makes the `HelloConfig` object instance _"magically"_ visible to `JerseyService`.
+
+IMPORTANT: It's usual (and good practice) to limit the propagation of OSGi-related stuff inside your code. Once we declared the OSGi component, we are done. We will not use any OSGi trickery outside `HelloConfig`.
+
+[source,Java]
+----
+@ApplicationPath ("/hello")
+@Component (immediate = true, publicFactory = false)
+@Instantiate
+@Provides
+public class HelloConfig extends ResourceConfig
+{
+    public HelloConfig ()
+    {
+        // Register resources and providers using package-scanning
+        packages (getClass ().getPackage ().getName ());
+    }
+}
+----
+
+For JAX-RS features, the class defines `@ApplicationPath` as `/hello`. This instructs Jersey to deploy a new JAX-RS servlet on `/services/hello`, directing RESTful requests to this bundle. The method `packages()` also tells Jersey to look for resources on classes belonging to package `org.lucidj.helloservice`. Let's take a look at the classes it will discover, `HelloWorldResource` and `HelloMarsResource`.
+
+===== Class HelloWorldResource
+
+The class `HelloWorldResource` is defined as follows:
+
+[source,Java]
+----
+@Path ("helloWorld")
+public class HelloWorldResource
+{
+    @GET
+    @Produces ("text/plain")
+    public String sayHello ()
+    {
+        return ("Hello World!\n");
+    }
+}
+----
+
+It sets the `@Path` as `helloWorld`, so you can test it using:
+
+....
+$ curl http://localhost:8181/services/hello/helloWorld
+Hello world!
+....
+
+===== Class HelloMarsResource
+
+The class `HelloMarsResource` shows a little more JAX-RS features, like a variable `name` inside a URI path template:
+
+[source,Java]
+----
+@Path ("helloMars")
+public class HelloMarsResource
+{
+    @GET
+    @Produces ("text/plain")
+    @Path ("{name}")
+    public String sayHello (@PathParam ("name") String name)
+    {
+        return ("Hello from Mars, " + name + "\n");
+    }
+}
+----
+
+The class `HelloMarsResource` is defining `@Path` as `helloMars` and also a method-level `@Path` variable called `{name}`, which is replaced by Jersey with the help of `@PathParam`. You can test it like this:
+
+....
+$ curl http://localhost:8181/services/hello/helloMars/Shakespeare
+Hello from Mars, Shakespeare
+....
+
+Notice that we are on plain, familiar JAX-RS territory. You can do whatever you want, use any Jersey or JAX-RS features you wish.
+
+==== The Bundle JerseyService
+
+This bundle tracks and instantiates JAX-RS resources and uses a lot more OSGi features, because here we actually do some component gluing. We will focus on OSGi, since here Jersey works as usual.
+
+Please refer to `JerseyService.java` full source code to have a broader view. We will analyze parts of the code, always focusing on specific features.
+
+===== JerseyService as OSGi Component
+
+[source,Java]
+----
+@Component (immediate = true, publicFactory = false)
+@Instantiate
+public class JerseyService
+----
+
+The class `JerseyService` is declared here as an OSGi component. Notice however that, even tough the class is instantiated, the object is _never_ published as service. In fact, this component doesn't have to publish services, since it's already "publishing" the Jersey servlets, so to speak.
+
+===== Importing a Service with `@Requires`
+
+[source,Java]
+----
+@Requires
+private HttpService httpService;
+----
+
+The annotation `@Requires` marks a variable which will be injected with a service instance _with the same type_ as the variable (in this case `HttpService`). This only happens _after_ the constructor call, when the framework calls the method marked with `@Validate` (see <<Service Life-cycle with `@Validate` and `@Invalidate`>> below).
+
+Notice that `@Requires` also creates an explicit _dependency_ of the required service. The service is needed for this component to start, and if the service goes away or changes, this component is updated.
+
+===== Tracking Services using `@Bind` and `@Unbind`
+
+[source,Java]
+----
+@Bind (aggregate=true, optional=true, specification = Configurable.class)
+private void bindConfigurable (Configurable config)
+{
+    if (config instanceof ResourceConfig)
+    {
+        publish_jersey_resource ((ResourceConfig)config);
+    }
+}
+
+@Unbind
+private void unbindConfigurable (Configurable config)
+{
+    if (config instanceof ResourceConfig)
+    {
+        remove_jersey_resource ((ResourceConfig)config);
+    }
+}
+----
+
+The JAX-RS resources are tracked using their interface `javax.ws.rs.core.Configurable`. *Any component* implementing (or extending) this interface, will be notified on the method `bindConfigurable` as soon as it becomes active.
+
+Since one of the classes that implement `Configurable` is `ResourceConfig`, we keep track of these specific Jersey resources, publishing or removing the Jersey servlets as needed.
+
+===== Service Life-cycle with `@Validate` and `@Invalidate`
+
+[source,Java]
+----
+@Validate
+private void validate ()
+{
+    // The component is ready, all @Requires services are available
+}
+
+@Invalidate
+private void invalidate ()
+{
+    // The component is being shutdown, probably the bundle is going away
+}
+----
+
+These annotations mark the service life-cycle. When a Java object is published as a OSGi service, it's life-cycle can be tracked for us.
+
+The `@Validate` and `@Invalidate` annotations designate which methods will be called once the object is ready (for instance, when all it's service `@Requires` are satisfied) and when the object should do it's cleanup, like when the bundle is being deactivated.
+
+=== Notes
+
+This subproject illustrates a simple yet functional JAX-RS component. It's important to explore and understand it, because we have here all the foundations of much more complex components.
 
 == Copyright
 
