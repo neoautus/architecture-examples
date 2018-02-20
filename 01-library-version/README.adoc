@@ -33,10 +33,17 @@ This example shows how 2 different versions of the same library can work togethe
 
 If you want to use the integrated Karaf, you can follow https://github.com/neoautus/architecture-examples/tree/master/00-stage-karaf[these instructions to build the Karaf stage].
 
-* Run `ant build-library-version` from the example root *OR*
+* Run `ant build-library-version` from the example root;
++
+or
+
 * Run `ant` from the subproject directory.
 
 === Testing
+
+To test OSGi code you need to _deploy_ the test bundles. It's quite similar to a JEE application: the OSGi container runs a collection of other modules, so the test code will _interact_ with these modules instead of simply running like "java -jar Test.jar".
+
+It is recommended to have a _stage_ available (see <<Building>). If you have, the deployment is _automatic_.
 
 * After building, if you are using the provided Karaf stage, the bundles are already copied into `deploy` directory and are ready to be deployed. If Karaf is running, they are *already deployed*;
 * If you wish to test on another systems, the Jars you need are available in `01-library-version/dist` directory;
