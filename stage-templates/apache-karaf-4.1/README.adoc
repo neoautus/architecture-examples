@@ -14,9 +14,9 @@
 // the License.
 :experimental:
 
-You can use Apache Karaf to test all examples in this project. This sub-project makes a full Karaf installation, downloading it and unpackaging Karaf inside the `stage` directory. You can rebuild the stage as many times you want.
+This sub-project creates a *_stage_* where you can test all examples. _A *stage* is a directory with a working install of an OSGi container_, in this case Apache Karaf 4.1. This sub-project builds a full Apache Karaf installation, downloading and unpackaging Karaf inside the `stage` directory. You can rebuild the stage as many times you want.
 
-Once available, the `stage` will be used as deployment target automatically by all other sub-projects available. All created Jars will be copied automatically inside `stage/deploy`. If you want to change this, please remove or edit the property file `stage/deploy.properties`.
+Once available, *the `stage` will be used as deployment target automatically by all other sub-projects available*. All created Jars will be copied automatically inside `stage/deploy`. If you want to change this, please remove or edit the property file `stage/deploy.properties`.
 
 TIP: You can run Apache Karaf on _Raspberry Pi_. You just need a compatible JDK. See <<Installing Java on Raspberry Pi>> for instructions to install Azul's Zulu OpenJDK.
 
