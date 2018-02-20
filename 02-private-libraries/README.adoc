@@ -26,7 +26,7 @@ This example uses the famous BouncyCastle security library. _For didactic purpos
 
 === Building
 
-If you want to use the integrated Karaf, you can follow https://github.com/neoautus/architecture-examples/tree/master/00-stage-karaf[these instructions to build the Karaf stage].
+If you want to use the integrated Karaf, you can follow https://github.com/neoautus/architecture-examples/tree/master/stage-templates/apache-karaf-4.1[these instructions to build the Karaf stage].
 
 * Run `ant build-private-libraries` from the example root;
 +
