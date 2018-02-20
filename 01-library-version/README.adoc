@@ -43,7 +43,7 @@ or
 
 To test OSGi code you need to _deploy_ the test bundles. It's quite similar to a JEE application: the OSGi container runs a collection of other modules, so the test code will _interact_ with these modules instead of simply running like "java -jar Test.jar".
 
-It is recommended to have a _stage_ available (see <<Building>). If you have, the deployment is _automatic_.
+It is recommended to have a _stage_ available (see <<Building>>). If you have, the deployment is _automatic_.
 
 * After building, if you are using the provided Karaf stage, the bundles are already copied into `deploy` directory and are ready to be deployed. If Karaf is running, they are *already deployed*;
 * If you wish to test on another systems, the Jars you need are available in `01-library-version/dist` directory;
