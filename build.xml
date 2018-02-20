@@ -4,7 +4,7 @@
     <import file="configure.xml"/>
 
     <target name="build-stage">
-        <subant antfile="build-stage.xml" buildpath="${basedir}/00-stage-karaf"/>
+        <subant buildpath="${basedir}/stage-templates/apache-karaf-4.1"/>
     </target>
 
     <target name="build-library-version">

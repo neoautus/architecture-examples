@@ -3,7 +3,7 @@
 
     <import>
         <fileset dir="${basedir}" includes="configure.xml"/>
-        <fileset dir="${basedir}/.." includes="configure.xml"/>
+        <fileset dir="${basedir}/../.." includes="configure.xml"/>
     </import>
 
     <property file="build.properties"/>
