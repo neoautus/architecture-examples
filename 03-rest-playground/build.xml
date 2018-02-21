@@ -56,4 +56,12 @@
 
     </target>
 
+    <target name="build-all" depends="init">
+
+        <antcall target="deploy-jersey"/>
+        <antcall target="build-hello"/>
+        <antcall target="build-jersey"/>
+
+    </target>
+
 </project>

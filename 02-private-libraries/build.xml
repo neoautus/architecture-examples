@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
-<project name="private-libraries" default="build-modules">
+<project name="private-libraries" default="build-all">
 
     <import>
         <fileset dir="${basedir}" includes="configure.xml"/>
         <fileset dir=".." includes="configure.xml"/>
     </import>
 
-    <target name="build-modules" depends="init">
+    <target name="build-all" depends="init">
 
         <!--
             These sources use ipojo feature on Apache Karaf.

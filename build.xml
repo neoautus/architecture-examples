@@ -21,7 +21,7 @@
 
     <target name="build-all">
         <antcall target="build-stage"/>
-        <iterate target=""/>
+        <iterate target="build-all"/>
     </target>
 
     <target name="clean">
