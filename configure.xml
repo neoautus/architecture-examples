@@ -220,7 +220,7 @@
         <sequential>
             <if><isset property="stage.available.flag"/>
                 <then>
-                    <property file="${stage.dir}/stage.properties"/>
+                    <property file="${stage.dir}/deploy.properties"/>
                     <property name="deploy.dir" value="${stage.dir}/deploy"/>
                     <copy file="@{file}" todir="${deploy.dir}"
                         overwrite="true" taskname="deploy"/>

@@ -44,7 +44,7 @@
         </unzip>
 
         <!-- Store the deployment location we should use -->
-        <propertyfile file="${stage.dir}/stage.properties">
+        <propertyfile file="${stage.dir}/deploy.properties">
             <entry key="deploy.dir" value="${stage.dir}/deploy"/>
         </propertyfile>
 
