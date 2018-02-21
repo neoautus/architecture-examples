@@ -20,6 +20,7 @@
     </target>
 
     <target name="build-all">
+        <antcall target="build-stage"/>
         <iterate target=""/>
     </target>
 
