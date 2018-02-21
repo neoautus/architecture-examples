@@ -32,13 +32,13 @@ Specially, you will get known to `Bnd` (http://bndtools.org/), which is *the* re
 
 === Building
 
-*This project can download and create a local install of Apache Karaf for you.* It is not built by default. If you want to use the integrated Karaf, you should follow https://github.com/neoautus/architecture-examples/tree/master/00-stage-karaf[these instructions to build the Karaf stage].
+We strongly suggest you to start with the Karaf stage, which is where the bundles will be deployed, and test every subproject individually. https://github.com/neoautus/architecture-examples/tree/master/stage-templates/apache-karaf-4.1[You can follow these instructions to build the Karaf stage.]
+
+To specific instructions to run the examples and the tests are available for each subproject on the `README.adoc` file.
 
 To build _all_ subprojects at once, just type `ant` on project root.
 
 By default, Ant will download and cache all needed tools, then invoke the `build-all` target. The output of all builds will be located in `dist/` directory beneath every subproject. If you're using the Karaf stage, all bundles will also be deployed into Karaf.
-
-To specific instructions to run the examples and the tests are available for each subproject on the `README.adoc` file.
 
 === Useful Ant targets
 
