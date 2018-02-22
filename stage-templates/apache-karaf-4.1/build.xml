@@ -43,6 +43,11 @@
             <cutdirsmapper dirs="1"/>
         </unzip>
 
+        <!-- Overwrite some configurations -->
+        <copy todir="${stage.dir}/etc">
+            <fileset dir="${basedir}/etc" includes="**/*.*"/>
+        </copy>
+
         <!-- Store the deployment location we should use -->
         <propertyfile file="${stage.dir}/deploy.properties">
             <entry key="deploy.dir" value="${stage.dir}/deploy"/>
