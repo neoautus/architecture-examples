@@ -33,27 +33,11 @@ TIP: You can change `deploy.properties` to point to any directory you like, so y
 
 === How to Build
 
-==== Step 1
+* Run `ant build-stage` from the project root;
++
+or
 
-Run `ant build-stage` on project root.
-
-==== Step 2
-
-You will need to install *WebConsole* and *iPOJO* manually.
-
-1) Start Apache Karaf shell:
-....
-$ stage/bin/karaf
-....
-2) Run the following Karaf shell commands:
-....
-karaf@root()> feature:install webconsole
-karaf@root()> feature:repo-add http://repo1.maven.org/maven2/org/apache/felix/org.apache.felix.ipojo.features/1.12.1/org.apache.felix.ipojo.features-1.12.1.xml
-karaf@root()> feature:install ipojo-all
-....
-
-TIP: To access WebConsole navigate to: http://localhost:8181/system/console/.
-Both username and password are simply `karaf`.
+* Run `ant` from project root. Will build the stage _and also all subprojects_.
 
 === Testing
 
@@ -62,6 +46,9 @@ Both username and password are simply `karaf`.
 * To start Karaf in daemon mode use: `stage/bin/start`
 * To stop Karaf daemon use: `stage/bin/stop`
 * The Karaf log file is located at: `stage/data/log/karaf.log`
+
+TIP: To access WebConsole navigate to: http://localhost:8181/system/console/.
+Both username and password are simply `karaf`.
 
 === Key Directories
 
