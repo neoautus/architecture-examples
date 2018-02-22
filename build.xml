@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="architecture-examples" default="build-all">
+<project name="architecture-examples" default="deploy-all">
 
     <import file="configure.xml"/>
 
@@ -20,6 +20,10 @@
     </target>
 
     <target name="build-all">
+        <iterate target="build-all"/>
+    </target>
+
+    <target name="deploy-all">
         <antcall target="build-stage"/>
         <iterate target="build-all"/>
     </target>
