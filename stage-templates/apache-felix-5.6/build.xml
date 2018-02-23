@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<project name="apache-felix" default="build-runtime">
+
+    <import>
+        <fileset dir="${basedir}" includes="configure.xml"/>
+        <fileset dir="${basedir}/../.." includes="configure.xml"/>
+    </import>
+
+    <property file="build.properties"/>
+
+    <target name="build-runtime" depends="init">
+
+        <!--
+            Installs a clean Apache Felix into stage.
+        -->
+
+        <mkdir dir="${felix.dist.dir}"/>
+        <if><not><available file="${felix.dist.dir}/${felix.dist.zip}"/></not>
+            <then>
+                <echo message="Downloading Apache Felix distribution: ${felix.dist.zip}"/>
+                <get src="${felix.dist.url}" dest="${felix.dist.dir}/download.tmp" verbose="true"/>
+                <move file="${felix.dist.dir}/download.tmp"
+                    tofile="${felix.dist.dir}/${felix.dist.zip}"/>
+            </then>
+        </if>
+
+        <!-- Apache Felix is unziped first so it can be overwritten if needed -->
+        <delete dir="${stage.dir}" quiet="true"/>
+        <unzip src="${felix.dist.dir}/${felix.dist.zip}" dest="${stage.dir}">
+            <cutdirsmapper dirs="1"/>
+        </unzip>
+
+        <!-- Store the deployment location we should use -->
+        <propertyfile file="${stage.dir}/deploy.properties">
+            <entry key="deploy.dir" value="${stage.dir}/deploy"/>
+        </propertyfile>
+
+        <!-- Make /bin/* +x since we get Karaf from .zip -->
+        <chmod perm="ug+rx">
+            <fileset dir="${stage.dir}">
+                <include name="bin/*"/>
+                <exclude name="**/*.bat"/>
+            </fileset>
+        </chmod>
+
+    </target>
+
+</project>
