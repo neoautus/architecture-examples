@@ -19,7 +19,7 @@ THIS_FILE=`which "$0" 2>/dev/null`
 [ $? -gt 0 -a -f "$0" ] && THIS_FILE="$0"
 CP="$(pwd)/$THIS_FILE"
 DIR=$(cd "$(dirname "$THIS_FILE")"; pwd)
-HOME=$(cd "$DIR/.."; pwd)
+FELIX_HOME=$(cd "$DIR/.."; pwd)
 
 # Cleanup paths for Cygwin
 case "$platform" in
@@ -50,6 +50,6 @@ then
 	java="$JAVA_HOME/bin/java"
 fi
 
-cd $HOME
-exec "$java" -cp "$CLASSPATH" -Dfelix.config.properties="file:$HOME/conf/config.properties" $java_args @MAINCLASS@ "$@"
+cd $FELIX_HOME
+exec "$java" -cp "$CLASSPATH" -Dfelix.config.properties="file:$FELIX_HOME/conf/config.properties" $java_args @MAINCLASS@ "$@"
 exit 1
