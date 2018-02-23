@@ -17,6 +17,7 @@
 package org.lucidj.jerseyservice;
 
 import org.apache.felix.ipojo.annotations.*;
+import org.glassfish.jersey.inject.hk2.JerseyClassAnalyzer;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.osgi.service.http.HttpService;
@@ -36,6 +37,14 @@ public class JerseyService
 
     private final static String JERSEY_SERVLET_ALIAS = "/services";
     private ServletContainer jersey_servlet_container;
+
+    // HACK: Sometimes, on install, when this component becomes active, the Jersey
+    // Injector may be still not installed. WHen this happens, Jersey ServletContainer
+    // throws java.lang.IllegalStateException: InjectionManagerFactory not found.
+    // Since we have below a reference to Jersey HK2, it is insured that when we're
+    // running, _both_ Jersey and Jersey injection (HK2) are loaded and available.
+    // See: https://stackoverflow.com/a/46405129/1489074
+    public String _force_hk2_to_be_available = JerseyClassAnalyzer.NAME;
 
     @Requires
     private HttpService httpService;

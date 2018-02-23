@@ -25,5 +25,14 @@
       </library>
     </orderEntry>
     <orderEntry type="library" scope="PROVIDED" name="Java EE API 7.0" level="project" />
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library name="Jersey HK2 2.26">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../cache/lib/jersey/lib/jar/jersey-hk2-2.26.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
