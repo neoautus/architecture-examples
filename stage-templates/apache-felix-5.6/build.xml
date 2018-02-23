@@ -8,6 +8,8 @@
 
     <property file="build.properties"/>
 
+    <property name="main.class" value="org.apache.felix.main.Main"/>
+
     <target name="build-runtime" depends="init">
 
         <!--
@@ -32,14 +34,38 @@
 
         <!-- Store the deployment location we should use -->
         <propertyfile file="${stage.dir}/deploy.properties">
-            <entry key="deploy.dir" value="${stage.dir}/deploy"/>
+            <entry key="deploy.dir" value="${stage.dir}/bundle"/>
         </propertyfile>
 
-        <!-- Make /bin/* +x since we get Karaf from .zip -->
+        <!-- No -x anywhere -->
+        <chmod perm="uog-x">
+            <fileset dir="${stage.dir}" includes="**/*"/>
+        </chmod>
+
+        <!-- Create a fancy launcher which embeds the Jar within the script and "Works on Mac"(TM) :) -->
+        <property name="fancy-launcher" value="${stage.dir}/bin/felix"/>
+        <echo message="Creating ${fancy-launcher}"/>
+        <copy file="${basedir}/bin/felix" overwrite="true"
+              tofile="${fancy-launcher}" >
+            <filterchain>
+                <replacetokens >
+                    <token key="MAINCLASS" value="${main.class}"/>
+                </replacetokens>
+                <fixcrlf eol="lf" eof="remove" fixlast="true"/>
+            </filterchain>
+        </copy>
+        <concat destfile="${fancy-launcher}" append="yes" binary="true" force="yes">
+            <file name="${stage.dir}/bin/felix.jar"/>
+        </concat>
+        <chmod file="${fancy-launcher}" perm="a+x"/>
+
+        <!-- Make /bin/* +x since we get Felix from .zip -->
         <chmod perm="ug+rx">
             <fileset dir="${stage.dir}">
                 <include name="bin/*"/>
+                <exclude name="**/*.exe"/>
                 <exclude name="**/*.bat"/>
+                <exclude name="**/*.jar"/>
             </fileset>
         </chmod>
 
