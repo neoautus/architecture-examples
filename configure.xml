@@ -10,6 +10,9 @@
     <property name="libcache.dir" value="${cache.dir}/lib"/>
     <property name="tmp.dir" value="${cache.dir}/tmp"/>
 
+    <!-- Comment out if you want default Ivy cache location ${user.home}/.ivy2 -->
+    <property name="ivy.default.ivy.user.dir" value="${cache.dir}/ivy2" />
+
     <property name="stage.dir" value="${configure.dir}/stage"/>
     <condition property="stage.available.flag">
         <available file="${stage.dir}" type="dir"/>
