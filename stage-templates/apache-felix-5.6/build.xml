@@ -69,7 +69,8 @@
         </unzip>
 
         <!-- Store the deployment location we should use -->
-        <property name="deploy.dir" value="${stage.dir}/bundle"/>
+        <property name="deploy.dir" value="${stage.dir}/deploy"/>
+        <mkdir dir="${deploy.dir}"/>
         <propertyfile file="${stage.dir}/deploy.properties">
             <entry key="deploy.dir" value="${deploy.dir}"/>
         </propertyfile>
@@ -97,13 +98,14 @@
         <chmod file="${fancy-launcher}" perm="a+x"/>
 
         <!-- Copy preloaded bundles -->
-        <copy todir="${deploy.dir}" flatten="true">
+        <property name="preload.bundles.dir" value="${stage.dir}/bundle"/>
+        <copy todir="${preload.bundles.dir}" flatten="true">
             <path refid="default/ipojo"/>
             <path refid="pax/logging"/>
             <path refid="pax/web"/>
             <path refid="felix/webconsole"/>
         </copy>
-        <delete file="${deploy.dir}/org.apache.felix.ipojo.annotations-1.12.1.jar"/>
+        <delete file="${preload.bundles.dir}/org.apache.felix.ipojo.annotations-1.12.1.jar"/>
         <touch file="${stage.dir}/log/felix.log" mkdirs="true"/>
 
         <!-- Copy extra config files -->
