@@ -42,15 +42,15 @@
 
         <property name="ipojo.rev" value="1.12.1"/>
         <resolvePath id="default/ipojo">
-            <dependency org="org.apache.felix" name="org.apache.felix.ipojo" rev="${ipojo.rev}" />
-            <dependency org="org.apache.felix" name="org.apache.felix.ipojo.api" rev="${ipojo.rev}" />
-            <dependency org="org.apache.felix" name="org.apache.felix.ipojo.annotations" rev="${ipojo.rev}"/>
-            <dependency org="org.apache.felix" name="org.apache.felix.ipojo.handler.eventadmin" rev="1.8.0"/>
-            <dependency org="org.apache.felix" name="org.apache.felix.ipojo.handler.extender" rev="1.4.0"/>
+            <dependency org="org.apache.felix" name="org.apache.felix.ipojo" rev="${ipojo.rev}" transitive="false"/>
+            <dependency org="org.apache.felix" name="org.apache.felix.ipojo.api" rev="${ipojo.rev}" transitive="false"/>
+            <dependency org="org.apache.felix" name="org.apache.felix.ipojo.annotations" rev="${ipojo.rev}" transitive="false"/>
+            <!--dependency org="org.apache.felix" name="org.apache.felix.ipojo.handler.eventadmin" rev="1.8.0"/-->
+            <dependency org="org.apache.felix" name="org.apache.felix.ipojo.handler.extender" rev="1.4.0" transitive="false"/>
         </resolvePath>
 
         <resolvePath id="default/javaee-api">
-            <dependency org="javax" name="javaee-api" rev="7.0" />
+            <dependency org="javax" name="javaee-api" rev="7.0" transitive="false"/>
         </resolvePath>
 
     </target>
