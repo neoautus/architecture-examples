@@ -34,8 +34,8 @@ Specially, you will get known to `Bnd` (http://bndtools.org/), which is *the* re
 
 We suggest you to start building a stage, this stage may be a Felix or Karaf stage, Karaf stage will be built  by default on build.xml. The stage area is where the bundles will be deployed, and every subproject will be tested individually.
 
-* https://github.com/neoautus/architecture-examples/stage-templates/apache-felix-5.6/[You can follow these instructions to build the Felix stage.]
-* https://github.com/neoautus/architecture-examples/stage-templates/apache-karaf-4.1/[You can follow these instructions to build the Karaf stage.]
+* https://github.com/neoautus/architecture-examples/tree/master/stage-templates/apache-felix-5.6[You can follow these instructions to build the Felix stage.]
+* https://github.com/neoautus/architecture-examples/tree/master/stage-templates/apache-karaf-4.1/[You can follow these instructions to build the Karaf stage.]
 
 To specific instructions to run the examples and the tests are available for each subproject on the `README.adoc` file.
 
