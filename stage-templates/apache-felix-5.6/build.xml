@@ -12,24 +12,37 @@
 
     <target name="getlibs" depends="configure.getlibs">
 
-        <!--resolvePath id="felix/webconsole">
-            <dependency org="org.apache.felix" name="org.apache.felix.webconsole" rev="4.3.4"/>
-        </resolvePath-->
+        <resolvePath id="felix/webconsole">
+            <!-- Main -->
+            <dependency org="org.apache.felix" name="org.apache.felix.webconsole" rev="4.3.4" transitive="false"/>
+            <!-- Dependencies -->
+            <dependency org="commons-fileupload" name="commons-fileupload" rev="1.2.1" transitive="false"/>
+            <dependency org="commons-io" name="commons-io" rev="1.4" transitive="false"/>
+        </resolvePath>
 
         <resolvePath id="pax/logging">
+            <!-- Main -->
             <dependency org="org.ops4j.pax.logging" name="pax-logging-api" rev="1.10.1" transitive="false"/>
             <dependency org="org.ops4j.pax.logging" name="pax-logging-service" rev="1.10.1" transitive="false"/>
             <dependency org="org.ops4j.pax.logging" name="pax-logging-log4j2" rev="1.10.1" transitive="false"/>
+            <!-- Required Services -->
             <dependency org="org.apache.felix" name="org.apache.felix.configadmin" rev="1.8.16" transitive="false"/>
             <dependency org="org.apache.felix" name="org.apache.felix.fileinstall" rev="3.6.4" transitive="false"/>
         </resolvePath>
 
-        <!--resolvePath id="pax/web">
-            <dependency org="org.ops4j.pax.web" name="pax-web-api" rev="6.1.1" transitive="false"/>
-            <dependency org="org.ops4j.pax.web" name="pax-web-jetty" rev="6.1.1" transitive="false"/>
-            <dependency org="org.ops4j.pax.web" name="pax-web-runtime" rev="6.1.1" transitive="false"/>
-            <dependency org="org.ops4j.pax.web" name="pax-web-spi" rev="6.1.1" transitive="false"/>
-        </resolvePath-->
+        <resolvePath id="pax/web">
+            <!-- Main -->
+            <dependency org="org.ops4j.pax.web" name="pax-web-api" rev="6.1.2" transitive="false"/>
+            <dependency org="org.ops4j.pax.web" name="pax-web-jetty-bundle" rev="6.1.2" transitive="false"/>
+            <dependency org="org.ops4j.pax.web" name="pax-web-runtime" rev="6.1.2" transitive="false"/>
+            <dependency org="org.ops4j.pax.web" name="pax-web-spi" rev="6.1.2" transitive="false"/>
+            <!-- Dependencies -->
+            <dependency org="org.apache.xbean" name="xbean-finder" rev="4.6" transitive="false"/>
+            <dependency org="org.apache.xbean" name="xbean-reflect" rev="4.6" transitive="false"/>
+            <dependency org="org.apache.xbean" name="xbean-bundleutils" rev="4.6" transitive="false"/>
+            <dependency org="org.ow2.asm" name="asm" rev="6.0"/>
+            <dependency org="org.ow2.asm" name="asm-commons" rev="6.0"/>
+        </resolvePath>
 
     </target>
 
@@ -87,8 +100,8 @@
         <copy todir="${deploy.dir}" flatten="true">
             <path refid="default/ipojo"/>
             <path refid="pax/logging"/>
-            <!--path refid="pax/web"/>
-            <path refid="felix/webconsole"/-->
+            <path refid="pax/web"/>
+            <path refid="felix/webconsole"/>
         </copy>
         <delete file="${deploy.dir}/org.apache.felix.ipojo.annotations-1.12.1.jar"/>
         <touch file="${stage.dir}/log/felix.log" mkdirs="true"/>
