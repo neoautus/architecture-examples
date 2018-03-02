@@ -159,8 +159,15 @@
         <delete dir="${stage.dir}"/>
     </target>
 
-    <target name="configure">
+    <target name="reconfigure"
+        description="Clear all Ivy/Maven caches and retrieve all external dependencies.">
         <delete dir="${cache.dir}"/>
+        <ant target="init" inheritall="false"/>
+    </target>
+
+    <target name="configure"
+        description="Clear library caches and retrieve all external dependencies.">
+        <delete dir="${cache.dir}/lib"/>
         <ant target="init" inheritall="false"/>
     </target>
 
