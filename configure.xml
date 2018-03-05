@@ -87,7 +87,7 @@
                 <then>
                     <echo taskname="resolvePath" message=":: Resolving dependencies for: @{id}"/>
                     <ivy:resolve resolveid="@{id}.resolve"
-                        log="download-only" useCacheOnly="@{offline}">
+                        log="download-only" useCacheOnly="@{offline}" type="@{type}">
                         <dependency-list/>
                     </ivy:resolve>
                     <ivy:retrieve taskname="resolvePath"
