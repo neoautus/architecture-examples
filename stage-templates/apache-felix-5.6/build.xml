@@ -17,6 +17,17 @@
             <dependency org="org.apache.felix" name="org.apache.felix.scr" rev="2.0.14" transitive="false"/>
         </resolvePath>
 
+        <resolvePath id="ow2/asm">
+            <dependency org="org.ow2.asm" name="asm" rev="6.0"/>
+            <dependency org="org.ow2.asm" name="asm-commons" rev="6.0"/>
+            <!--dependency org="org.ow2.asm" name="asm-all" rev="5.2"/-->
+        </resolvePath>
+
+        <resolvePath id="aries/spyfly">
+            <dependency org="org.apache.aries.spifly" name="org.apache.aries.spifly.dynamic.bundle" rev="1.0.10" transitive="false"/>
+            <dependency org="org.apache.aries" name="org.apache.aries.util" rev="1.0.0" transitive="false"/>
+        </resolvePath>
+
         <resolvePath id="felix/webconsole">
             <!-- Main -->
             <dependency org="org.apache.felix" name="org.apache.felix.webconsole" rev="4.3.4" transitive="false"/>
@@ -50,8 +61,7 @@
             <dependency org="org.apache.xbean" name="xbean-finder" rev="4.6" transitive="false"/>
             <dependency org="org.apache.xbean" name="xbean-reflect" rev="4.6" transitive="false"/>
             <dependency org="org.apache.xbean" name="xbean-bundleutils" rev="4.6" transitive="false"/>
-            <dependency org="org.ow2.asm" name="asm" rev="6.0"/>
-            <dependency org="org.ow2.asm" name="asm-commons" rev="6.0"/>
+            <!-- + org.ow2.asm/asm/6.0 -->
         </resolvePath>
 
         <resolvePath id="jetty/jetty">
@@ -179,6 +189,8 @@
         <property name="preload.bundles.dir" value="${stage.dir}/bundle"/>
         <copy todir="${preload.bundles.dir}" flatten="true">
             <path refid="felix/ds"/>
+            <path refid="ow2/asm"/>
+            <path refid="aries/spyfly"/>
             <path refid="default/ipojo"/>
             <path refid="pax/url"/>
             <path refid="pax/logging"/>
