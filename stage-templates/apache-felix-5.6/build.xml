@@ -97,6 +97,31 @@
             <dependency org="biz.aQute.bnd" name="bndlib" rev="2.4.0" transitive="false"/><!-- TODO: MOVE UP -->
         </resolvePath>
 
+        <resolvePath id="jboss/weld">
+            <!-- Main -->
+            <dependency org="org.jboss.weld" name="weld-osgi-bundle" rev="2.4.5.Final" transitive="false"/>
+            <!-- Dependencies -->
+            <dependency org="com.google.guava" name="guava" rev="18.0" transitive="false"/><!-- TODO: MOVE UP -->
+            <dependency org="javax.annotation" name="javax.annotation-api" rev="1.2" transitive="false"/>
+            <dependency org="javax.interceptor" name="javax.interceptor-api" rev="1.2" transitive="false"/>
+            <dependency org="javax.enterprise" name="cdi-api" rev="1.2" transitive="false"/>
+            <dependency org="org.jboss.classfilewriter" name="jboss-classfilewriter" rev="1.1.2.Final"/>
+            <dependency org="org.apache.servicemix.bundles" name="org.apache.servicemix.bundles.javax-inject" rev="1_2" transitive="false"/>
+        </resolvePath>
+
+        <resolvePath id="pax/cdi">
+            <!-- Main -->
+            <dependency org="org.ops4j.pax.cdi" name="pax-cdi-api" rev="1.0.0" transitive="false"/>
+            <dependency org="org.ops4j.pax.cdi" name="pax-cdi-spi" rev="1.0.0" transitive="false"/>
+            <dependency org="org.ops4j.pax.cdi" name="pax-cdi-extender" rev="1.0.0" transitive="false"/>
+            <dependency org="org.ops4j.pax.cdi" name="pax-cdi-extension" rev="1.0.0" transitive="false"/>
+            <dependency org="org.ops4j.pax.cdi" name="pax-cdi-weld" rev="1.0.0" transitive="false"/>
+            <dependency org="org.ops4j.pax.cdi" name="pax-cdi-web" rev="1.0.0" transitive="false"/>
+            <dependency org="org.ops4j.pax.cdi" name="pax-cdi-web-weld" rev="1.0.0.RC1" transitive="false"/>
+            <!-- Dependencies -->
+            <!-- None??? -->
+        </resolvePath>
+
     </target>
 
     <target name="build-runtime" depends="init">
@@ -161,6 +186,8 @@
             <path refid="pax/web"/>
             <path refid="felix/webconsole"/>
             <path refid="pax/war"/>
+            <path refid="jboss/weld"/>
+            <path refid="pax/cdi"/>
         </copy>
         <delete file="${preload.bundles.dir}/org.apache.felix.ipojo.annotations-1.12.1.jar"/>
         <touch file="${stage.dir}/log/felix.log" mkdirs="true"/>
