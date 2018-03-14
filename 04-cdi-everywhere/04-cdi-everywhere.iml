@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/pax-cdi-sample1/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/pax-cdi-sample1-client/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/pax-cdi-sample1-web/src" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" scope="PROVIDED" name="OSGi 5.0.0 (Core, Compendium, Enterprise)" level="project" />
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library name="Provided libraries for CDI 1.2">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../cache/lib/cdi/build/bundle/org.apache.servicemix.bundles.javax-inject-1_2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../cache/lib/cdi/build/bundle/pax-cdi-api-1.0.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../cache/lib/cdi/build/jar/cdi-api-1.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+  </component>
+</module>

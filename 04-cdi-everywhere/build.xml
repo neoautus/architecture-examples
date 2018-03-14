@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<project name="cdi-everywhere" default="build-all">
+
+    <import>
+        <fileset dir="${basedir}" includes="configure.xml"/>
+        <fileset dir=".." includes="configure.xml"/>
+    </import>
+
+    <target name="getlibs" depends="configure.getlibs">
+
+        <resolvePath id="cdi/build">
+            <dependency org="org.ops4j.pax.cdi" name="pax-cdi-api" rev="1.0.0" transitive="false"/>
+            <dependency org="javax.enterprise" name="cdi-api" rev="1.2" transitive="false"/>
+            <dependency org="org.apache.servicemix.bundles" name="org.apache.servicemix.bundles.javax-inject" rev="1_2" transitive="false"/>
+        </resolvePath>
+
+    </target>
+
+    <target name="build-all" depends="init">
+
+        <build.module dir="pax-cdi-sample1" symbolicName="Pax-CDI-Sample1" version="1.0"
+                      exports="org.ops4j.pax.cdi.sample1;version=1.0.0"
+                      deploy="true" outfileProperty="cdi-sample1.jar">
+            <classpath>
+                <path refid="cdi/build"/>
+            </classpath>
+        </build.module>
+
+        <build.module dir="pax-cdi-sample1-client" symbolicName="Pax-CDI-Sample1-Client" version="1.0" deploy="true">
+            <classpath>
+                <pathelement path="${cdi-sample1.jar}"/>
+                <path refid="cdi/build"/>
+            </classpath>
+        </build.module>
+
+    </target>
+
+</project>
