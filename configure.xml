@@ -405,6 +405,15 @@
                 </then>
             </if>
 
+            <!-- Append bundle.inc to bundle.bnd, if it exists -->
+            <if><available file="@{src}/../bundle.inc"/>
+                <then>
+                    <concat destfile="${bnd.file}" append="true">
+                        <file name="@{src}/../bundle.inc"/>
+                    </concat>
+                </then>
+            </if>
+
             <!--
                 At this point we have either a user-provided bnd file OR
                 a generated one. Now we are ready to create the OSGi bundle!
@@ -415,6 +424,15 @@
                  eclipse="false" failok="false" exceptions="true">
                 <classpath refid="build.bundle.path"/>
             </bnd>
+
+            <!-- Add full resources/ dir if it exists -->
+            <if><available file="@{src}/../resources" type="dir"/>
+                <then>
+                    <jar destfile="${module.dist.jar}" update="true">
+                        <fileset dir="@{src}/../resources" includes="**/*"/>
+                    </jar>
+                </then>
+            </if>
 
             <!-- ================================ -->
             <!-- Extra steps: Apply iPOJO tooling -->
