@@ -33,6 +33,13 @@
             </classpath>
         </build.module>
 
+        <!--build.module dir="pax-cdi-sample1-web" symbolicName="Pax-CDI-Sample1-Web" version="1.0" deploy="true">
+            <classpath>
+                <pathelement path="${cdi-sample1.jar}"/>
+                <path refid="cdi/build"/>
+            </classpath>
+        </build.module-->
+
     </target>
 
 </project>

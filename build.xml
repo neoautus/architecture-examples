@@ -27,6 +27,10 @@
         <subant buildpath="${basedir}/03-rest-playground"/>
     </target>
 
+    <target name="build-cdi-everywhere">
+        <subant buildpath="${basedir}/04-cdi-everywhere"/>
+    </target>
+
     <target name="build-all">
         <iterate target="build-all"/>
     </target>
