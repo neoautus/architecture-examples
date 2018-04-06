@@ -40,6 +40,33 @@
         <iterate target="build-all"/>
     </target>
 
+    <property name="hawtio.jar.file" value="${cache.dir}/hawtio/hawtio.jar"/>
+
+    <target name="get-hawtio" unless="hawtio.available.flag">
+        <mkdir dir="${cache.dir}/hawtio"/>
+        <get dest="${hawtio.jar.file}.temp"
+             src="https://oss.sonatype.org/content/repositories/public/io/hawt/hawtio-app/1.5.8/hawtio-app-1.5.8.jar"
+             skipexisting="false" verbose="true"/>
+        <move file="${hawtio.jar.file}.temp" tofile="${hawtio.jar.file}"/>
+    </target>
+
+    <target name="run-hawtio">
+
+        <!-- Conditionally download Hawtio -->
+        <condition property="hawtio.available.flag">
+            <available file="${hawtio.jar.file}" type="file"/>
+        </condition>
+        <antcall target="get-hawtio"/>
+
+        <!-- More info on: http://hawt.io/getstarted/ -->
+        <java jar="${hawtio.jar.file}" failonerror="yes" fork="yes">
+            <classpath>
+                <pathelement location="${hawtio.jar.file}"/>
+            </classpath>
+        </java>
+
+    </target>
+
     <target name="clean">
         <iterate target="clean"/>
     </target>
