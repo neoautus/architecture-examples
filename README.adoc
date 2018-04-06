@@ -32,16 +32,33 @@ Specially, you will get known to `Bnd` (http://bndtools.org/), which is *the* re
 
 === Building
 
-We suggest you to start building a stage, this stage may be a Felix or Karaf stage, Karaf stage will be built  by default on build.xml. The stage area is where the bundles will be deployed, and every subproject will be tested individually.
+You need a _stage_ to work. Our default _stage_ is built with Apache Felix. The stage area is where the bundles will be deployed, and every subproject will deploy it's artifacts there. You may also build an alternative stage using Apache Karaf if you wish:
 
-* https://github.com/neoautus/architecture-examples/tree/master/stage-templates/apache-felix-5.6[You can follow these instructions to build the Felix stage.]
-* https://github.com/neoautus/architecture-examples/tree/master/stage-templates/apache-karaf-4.1/[You can follow these instructions to build the Karaf stage.]
+* https://github.com/neoautus/architecture-examples/tree/master/stage-templates/apache-felix-5.6[Build the Felix stage]: Follow these instructions to build the _default_ Felix stage;
+* https://github.com/neoautus/architecture-examples/tree/master/stage-templates/apache-karaf-4.1/[Build the Karaf stage]: Use these instructions to build an _alternative_ Karaf stage.
 
 To specific instructions to run the examples and the tests are available for each subproject on the `README.adoc` file.
 
 To build _all_ subprojects at once, just type `ant` on project root.
 
-By default, Ant will download and cache all needed tools, then invoke the `build-all` target. The output of all builds will be located in `dist/` directory beneath every subproject. Karaf stage, will be built by default, so all bundles will be deployed into Karaf. If you change the stage to Felix (changing the stage target to Felix all bundles will
+By default, Ant will download and cache all needed tools, then invoke the `build-all` target. The output of all builds will be located in `dist/` directory beneath every subproject. If the stage is available, all built bundles will be automatically copied into `stage/deploy`.
+
+=== Running
+
+To run the OSGi container available on the `stage/` directory use:
+
+* Run `stage/bin/felix` for Apache Felix (our default container);
++
+or
+
+* Run `stage/bin/karaf` for a Apache Karaf stage.
+
+=== Administration and Monitoring
+
+There are 2 administration tools available:
+
+* http://felix.apache.org/documentation/subprojects/apache-felix-web-console.html[Apache Felix Web Console^]: The built-in admin console available for Apache Felix. http://localhost:6502/system/console[Click here to open Felix Console at http://localhost:6502/system/console/]. Both username and password are `admin`.
+* http://hawt.io[Hawt.io Console^]: Additional web console. Open source, extendable with lots of plugins. Use Ant to launch the Hawt.io server running `ant run-hawtio` on project root. After started, http://localhost:8181/hawtio/[click here to open Hawt.io Console at http://localhost:8181/hawtio/]. On the connection dialog that follows, be sure to set _host_ to `localhost` and _port_ to `6502` (our default Felix host and port). Keep the default _path_ the same `jolokia`. We use https://jolokia.org/[Jolokia] to provide JMX over HTTP/JSON.
 
 === Useful Ant targets
 
@@ -49,11 +66,13 @@ For details on building the code, see `ant -p`.
 
 These are the available targets:
 
-* `ant build-stage`: build the stage with Apache Karaf ready to run the examples
+* `ant build-stage`: build the stage with Apache Felix ready to run the examples;
+* `ant build-karaf`: build the stage using Apache Karaf instead;
 * `ant build-library-version`: build the Library Versioning subproject;
 * `ant build-private-libraries`: build the Private Libraries subproject;
 * `ant build-rest-playground`: build the Rest Playground subproject;
 * `ant build-all`: builds all available subprojects;
+* `ant run-hawtio`: download and start Hawt.io Web Console;
 * `ant clean`: removes the `build` and `dist` directories;
 * `ant zero`: same as `clean`, but also removes the `cache` directory with all downloaded tools;
 * `ant configure`: rebuild the library and tools cache.
