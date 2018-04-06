@@ -35,6 +35,9 @@ Specially, you will get known to `Bnd` (http://bndtools.org/), which is *the* re
 You need a _stage_ to work. Our default _stage_ is built with Apache Felix. The stage area is where the bundles will be deployed, and every subproject will deploy it's artifacts there. You may also build an alternative stage using Apache Karaf if you wish:
 
 * https://github.com/neoautus/architecture-examples/tree/master/stage-templates/apache-felix-5.6[Build the Felix stage]: Follow these instructions to build the _default_ Felix stage;
++
+or
+
 * https://github.com/neoautus/architecture-examples/tree/master/stage-templates/apache-karaf-4.1/[Build the Karaf stage]: Use these instructions to build an _alternative_ Karaf stage.
 
 To specific instructions to run the examples and the tests are available for each subproject on the `README.adoc` file.
