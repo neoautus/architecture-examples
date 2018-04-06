@@ -12,7 +12,7 @@
     </target>
 
     <target name="build-stage">
-        <antcall target="build-karaf"/>
+        <antcall target="build-felix"/>
     </target>
 
     <target name="build-library-version">

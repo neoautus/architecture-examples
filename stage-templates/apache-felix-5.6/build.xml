@@ -140,6 +140,13 @@
             <!-- None??? -->
         </resolvePath>
 
+        <resolvePath id="jmx/jolokia">
+            <dependency org="org.apache.aries.jmx" name="org.apache.aries.jmx" rev="1.1.5" transitive="false"/>
+            <dependency org="org.apache.aries" name="org.apache.aries.util" rev="1.1.1" transitive="false"/>
+            <dependency org="org.jolokia" name="jolokia-osgi" rev="1.2.3" transitive="false"/>
+            <dependency org="org.everit.osgi.jmx" name="org.everit.osgi.jmx.activator" rev="1.0.0" transitive="false"/>
+        </resolvePath>
+
     </target>
 
     <target name="build-runtime" depends="init">
@@ -208,6 +215,7 @@
             <path refid="pax/war"/>
             <path refid="jboss/weld"/>
             <path refid="pax/cdi"/>
+            <path refid="jmx/jolokia"/>
         </copy>
         <delete file="${preload.bundles.dir}/org.apache.felix.ipojo.annotations-1.12.1.jar"/>
         <touch file="${stage.dir}/log/felix.log" mkdirs="true"/>
