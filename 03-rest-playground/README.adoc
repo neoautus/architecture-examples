@@ -33,7 +33,9 @@ If you want to use the integrated Karaf, you can follow https://github.com/neoau
 +
 or
 
-* Run `ant` from the subproject directory.
+* Run `ant build-all` from the subproject directory.
+
+Afterwards, you can use just `ant` to rebuild changed modules. That will avoid the need to redeploy all Jersey bundles, which are already deployed after the initial `ant build-all`.
 
 == Testing
 
