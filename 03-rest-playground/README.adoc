@@ -40,19 +40,19 @@ or
 * After building, if you are using the provided Karaf stage, the bundles are already copied into `deploy` directory and are ready to be deployed. If Karaf is running, they are *already deployed*;
 * If you wish to test on another systems, the Jars you need are available in `03-rest-playground/dist` directory;
 
-The bundle *JerseyService* will register a servlet using the alias `/services` and also a dummy resource `/status`. You will be able to open the URL `http://localhost:8181/services/status` on any navigator, or use a command line util like `curl` to run a test:
+The bundle *JerseyService* will register a servlet using the alias `/services` and also a dummy resource `/status`. You will be able to open the URL `http://localhost:6502/services/status` on any navigator, or use a command line util like `curl` to run a test:
 
 ....
-$ curl http://localhost:8181/services/status
+$ curl http://localhost:6502/services/status
 Running
 ....
 
 We have also the test bundle *HelloService*. It will be tracked by *JerseyService*, which will publish the resources on two different URLs, giving results like these:
 
 ....
-$ curl http://localhost:8181/services/hello/helloWorld
+$ curl http://localhost:6502/services/hello/helloWorld
 Hello world!
-$ curl http://localhost:8181/services/hello/helloMars/Shakespeare
+$ curl http://localhost:6502/services/hello/helloMars/Shakespeare
 Hello from Mars, Shakespeare
 ....
 
@@ -109,7 +109,7 @@ public class HelloWorldResource
 It sets the `@Path` as `helloWorld`, so you can test it using:
 
 ....
-$ curl http://localhost:8181/services/hello/helloWorld
+$ curl http://localhost:6502/services/hello/helloWorld
 Hello world!
 ....
 
@@ -135,7 +135,7 @@ public class HelloMarsResource
 The class `HelloMarsResource` is defining `@Path` as `helloMars` and also a method-level `@Path` variable called `{name}`, which is replaced by Jersey with the help of `@PathParam`. You can test it like this:
 
 ....
-$ curl http://localhost:8181/services/hello/helloMars/Shakespeare
+$ curl http://localhost:6502/services/hello/helloMars/Shakespeare
 Hello from Mars, Shakespeare
 ....
 

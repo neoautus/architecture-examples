@@ -24,7 +24,7 @@ import javax.ws.rs.Produces;
 @Path ("helloMars")
 public class HelloMarsResource
 {
-    // Test URL: http://localhost:8181/services/hello/helloMars/[YourName]
+    // Test URL: http://localhost:6502/services/hello/helloMars/[YourName]
     @GET
     @Produces ("text/plain")
     @Path ("{name}")

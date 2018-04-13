@@ -23,7 +23,7 @@ import javax.ws.rs.Produces;
 @Path ("helloWorld")
 public class HelloWorldResource
 {
-    // Test URL: http://localhost:8181/services/hello/helloWorld
+    // Test URL: http://localhost:6502/services/hello/helloWorld
     @GET
     @Produces ("text/plain")
     public String sayHello ()
