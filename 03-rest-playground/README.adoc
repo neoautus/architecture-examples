@@ -35,7 +35,7 @@ or
 
 * Run `ant build-all` from the subproject directory.
 
-Afterwards, you can use just `ant` to rebuild changed modules. That will avoid the need to redeploy all Jersey bundles, which are already deployed after the initial `ant build-all`.
+Afterwards, you can use just `ant` to rebuild changed modules. That will avoid redeploying all Jersey bundles, which are already deployed after the initial `ant build-all`.
 
 == Testing
 
