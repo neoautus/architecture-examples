@@ -15,6 +15,7 @@
         <resolvePath id="felix/ds">
             <dependency org="org.apache.felix" name="org.apache.felix.scr.compat" rev="1.0.4" transitive="false"/>
             <dependency org="org.apache.felix" name="org.apache.felix.scr" rev="2.0.14" transitive="false"/>
+            <dependency org="org.apache.felix" name="org.apache.felix.metatype" rev="1.1.6" transitive="false"/>
         </resolvePath>
 
         <resolvePath id="ow2/asm">
