@@ -61,7 +61,7 @@ or
 There are 2 administration tools available:
 
 * http://felix.apache.org/documentation/subprojects/apache-felix-web-console.html[Apache Felix Web Console^]: The built-in admin console available for Apache Felix. http://localhost:6502/system/console[Click here to open Felix Console at http://localhost:6502/system/console/]. Both username and password are `admin`.
-* http://hawt.io[Hawt.io Console^]: Additional web console. Open source, extendable with lots of plugins. Use Ant to launch the Hawt.io server running `ant run-hawtio` on project root. After started, http://localhost:8181/hawtio/[click here to open Hawt.io Console at http://localhost:8181/hawtio/]. On the connection dialog that follows, be sure to set _host_ to `localhost` and _port_ to `6502` (our default Felix host and port). Keep the default _path_ the same `jolokia`. We use https://jolokia.org/[Jolokia] to provide JMX over HTTP/JSON.
+* http://hawt.io[Hawt.io Console^]: Additional web console. Open source, extendable with lots of plugins. Use Ant to launch the Hawt.io server running `ant run-hawtio` on project root. After started, http://localhost:8080/hawtio/[click here to open Hawt.io Console at http://localhost:8181/hawtio/]. On the connection dialog that follows, be sure to set _host_ to `localhost` and _port_ to `6502` (our default Felix host and port). Keep the default _path_ the same `jolokia`. We use https://jolokia.org/[Jolokia] to provide JMX over HTTP/JSON.
 
 === Useful Ant targets
 
