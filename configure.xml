@@ -1,6 +1,15 @@
 <?xml version="1.0"?>
 <project name="configure" xmlns:ivy="antlib:org.apache.ivy.ant">
 
+    <fail>Error:
+
+        ***** This project should NOT be run as root *****
+
+        <condition>
+            <equals arg1="root" arg2="${user.name}"/>
+        </condition>
+    </fail>
+
     <property name="docs.dir" value="${basedir}/docs"/>
     <property name="dist.dir" value="${basedir}/dist"/>
     <property name="build.dir" value="${basedir}/build"/>
