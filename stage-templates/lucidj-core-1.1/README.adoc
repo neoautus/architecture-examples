@@ -1,0 +1,86 @@
+= LucidJ Core Stage Install
+// Copyright 2017 NEOautus Ltd. (http://neoautus.com)
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not
+// use this file except in compliance with the License. You may obtain a copy of
+// the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+// License for the specific language governing permissions and limitations under
+// the License.
+:experimental:
+
+This sub-project creates a *_stage_* where you can test all examples. _A *stage* is a directory with a working install of an OSGi container_, in this case LucidJ Core 1.x. This sub-project builds a full LucidJ Core installation, downloading and unpackaging LucidJ inside the `stage` directory. You can rebuild the stage as many times you want.
+
+Once available, *the `stage` will be used as deployment target automatically by all other sub-projects available*. All created Jars will be copied automatically inside `stage/deploy`. If you want to change this, please remove or edit the property file `stage/deploy.properties`.
+
+TIP: You can run Apache Karaf on _Raspberry Pi_. You just need a compatible JDK. See <<Installing Java on Raspberry Pi>> for instructions to install Azul's Zulu OpenJDK.
+
+=== Description
+
+* LucidJ Core will be downloaded from it's site: https://github.com/neoautus/lucidj-core
+* Any previous `stage` will be *completelly removed*;
+* A new `stage` is built, with LucidJ Core unzipped inside it;
+* A file `stage/deploy.properties` is created, directing Ant to deploy all Jars into LucidJ.
+
+TIP: You can change `deploy.properties` to point to any directory you like, so your bundles can be automatically deployed into another OSGi container elsewhere. Set the directory using: +
+`deploy.dir=<the full path you want>`
+
+=== How to Build
+
+* Run `ant build-stage` from the project root;
++
+or
+
+* Run `ant` from project root. Will build the stage _and also all subprojects_.
+
+=== Testing
+
+* To start LucidJ server use: `stage/bin/ladmin start`
+* To enter LucidJ console shell use: `stage/bin/ladmin sh`
+* To exit LucidJ shell, simply hit: kbd:[Ctrl+Z] or kbd:[Ctrl+D]
+* To stop LucidJ server use: `stage/bin/ladmin stop`
+* The LucidJ log file is located at: `stage/data/log/system.log`
+* To tail LucidJ log file automatically use: `stage/bin/ladmin tail`
+
+TIP: To access WebConsole navigate to: http://localhost:6502/system/console/.
+Both username and password are simply `admin`.
+
+=== Key Directories
+
+Key directories to be aware of:
+
+* `bin` - the scripts used to control LucidJ
+* `data` - cache, internal data and temporary files
+* `log` - main log file `system.log` is stored here
+* `deploy` - auto-deploy directory, drop here any Jar you want to install
+* `etc` - ALL configuration files
+
+== Important Resources
+
+* http://felix.apache.org/[Apache Felix^]: Know Apache Felix, the OSGi runtime used by Karaf.
+
+=== Installing Java on Raspberry Pi
+
+Raspberry Pi have a fully certified OpenJDK distribution available: https://www.azul.com/products/zulu-embedded/[Zulu® Embedded^], built by https://www.azul.com/[Azul Systems^]. You can install it on Raspbian Stretch using:
+
+....
+# apt-get install dirmngr
+# apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0x219BD9C9
+# echo 'deb http://repos.azulsystems.com/debian stable main' > /etc/apt/sources.list.d/zulu.list
+# apt-get update
+# apt-get install zulu-embedded-8
+# java -version
+openjdk version "1.8.0_152"
+OpenJDK Runtime Environment (Zulu Embedded 8.25.0.76-linux-aarch32hf) (build 1.8.0_152-b76)
+OpenJDK Client VM (Zulu Embedded 8.25.0.76-linux-aarch32hf) (build 25.152-b76, mixed mode, Evaluation)
+....
+// TODO: ADD INSTRUCTIONS FOR Ant
+
+== Copyright
+
+This work is licensed under a http://www.apache.org/licenses/LICENSE-2.0[Apache License, Version 2.0].

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<project name="apache-karaf" default="build-runtime">
+
+    <import>
+        <fileset dir="${basedir}" includes="configure.xml"/>
+        <fileset dir="${basedir}/../.." includes="configure.xml"/>
+    </import>
+
+    <target name="build-runtime" depends="init">
+
+        <!--
+            Installs a clean LucidJ Core into stage.
+
+            To run LucidJ Core use:
+                stage/bin/ladmin start
+
+            To open the command console use:
+                stage/bin/ladmin sh
+                (To exit, hit Ctrl+D or Ctrl+Z)
+
+            To stop LucidJ use:
+                stage/bin/ladmin stop
+
+            To access WebConsole navigate to: http://localhost:6502/system/console/
+            Both Username and password are simply 'admin'.
+
+            Be sure to check latest instructions on:
+                https://github.com/neoautus/lucidj-core
+        -->
+
+        <getDependency group="lucidj-core"
+            org="org.lucidj.core" name="lucidj-core" rev="1.1-rc4" type="zip"/>
+
+        <!-- LucidJ Core is unziped first so it can be overwritten if needed -->
+        <delete dir="${stage.dir}" quiet="true"/>
+        <unzip dest="${stage.dir}">
+            <fileset dir="${libcache.dir}" includes="lucidj-core/**/*.zip"/>
+            <cutdirsmapper dirs="1"/>
+        </unzip>
+
+        <!-- Store the deployment location we should use -->
+        <propertyfile file="${stage.dir}/deploy.properties">
+            <entry key="deploy.dir" value="${stage.dir}/deploy"/>
+        </propertyfile>
+
+        <!-- Make /bin/* +x since we get Karaf from .zip -->
+        <chmod perm="ug+rx">
+            <fileset dir="${stage.dir}">
+                <include name="bin/*"/>
+                <exclude name="**/*.jar"/>
+                <exclude name="**/*.bat"/>
+                <exclude name="**/*.exe"/>
+                <exclude name="**/*.png"/>
+            </fileset>
+        </chmod>
+
+    </target>
+
+</project>
